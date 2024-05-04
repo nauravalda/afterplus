@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/after-icon.png",
         "backgroundColor": "#BC203C"
-      }
+      },
+      "package": "com.nauravalda.afterplusmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
