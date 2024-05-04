@@ -1,15 +1,16 @@
 {
   "expo": {
     "name": "afterplus",
-    "slug": "afterplus",
+    "slug": "afterplus-mobile",
+    "scheme": "afterplus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/after-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/after-splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#BC203C"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -18,13 +19,26 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services/google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/after-icon.png",
+        "backgroundColor": "#BC203C"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f8e0b8c4-0de3-49d6-92fd-663a09f0bfb9"
+      }
+    },
+    "owner": "nauravalda"
   }
 }
