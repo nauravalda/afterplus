@@ -15,9 +15,6 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
-import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
-
-
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
@@ -65,13 +62,4 @@ class MainApplication : Application(), ReactApplication {
     super.onConfigurationChanged(newConfig)
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig)
   }
-}
-
-@Override
-protected List<ReactPackage> getPackages() {
-    return Arrays.asList(
-        new MainReactPackage(),
-        new ReactNativeFirebaseAppPackage() // Add this line
-        // Add other packages if you have them
-    );
 }
