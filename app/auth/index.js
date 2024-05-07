@@ -42,7 +42,7 @@ export default function Auth() {
             const userDocument = await firestore().collection('users').doc(user.uid).get();
             if (userDocument.exists) {
                 console.log('User exists');
-                navigation.navigate('Home');
+                navigation.navigate('home');
                 // navigate to home screen
             } else {
                 console.log('User does not exist');
@@ -50,7 +50,7 @@ export default function Auth() {
                 await firestore().collection('users').doc(user.uid).set({
                     phoneNumber: user.phoneNumber,
                 });
-                navigation.navigate('Onboarding');
+                navigation.navigate('onboarding');
                 // navigate to onboarding screen
 
             }
@@ -159,9 +159,14 @@ export default function Auth() {
                         <TextInput
                             style={style.inputCode}
                             keyboardType="numeric"
+<<<<<<< HEAD
                             placeholder='XXXX'
                             maxLength={4}
                             
+=======
+                            placeholder='XXXXXX'
+                            maxLength={6}
+>>>>>>> 8cb89e8b4d2225da6de1c8e2ba93ef50475b9125
                             onChangeText={setCode}    
                         />
                     

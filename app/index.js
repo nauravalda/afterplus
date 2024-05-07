@@ -18,8 +18,12 @@ export default function App() {
     return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen  
+            name="auth" component={Auth} 
+            />
+            <Stack.Screen  
             name="onboarding" component={Onboarding} 
             />
+            
         </Stack.Navigator>
     );
     }
