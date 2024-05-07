@@ -159,14 +159,8 @@ export default function Auth() {
                         <TextInput
                             style={style.inputCode}
                             keyboardType="numeric"
-<<<<<<< HEAD
-                            placeholder='XXXX'
-                            maxLength={4}
-                            
-=======
-                            placeholder='XXXXXX'
                             maxLength={6}
->>>>>>> 8cb89e8b4d2225da6de1c8e2ba93ef50475b9125
+                            placeholder='XXXXXX'
                             onChangeText={setCode}    
                         />
                     
