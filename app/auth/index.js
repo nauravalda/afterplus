@@ -161,6 +161,7 @@ export default function Auth() {
                             keyboardType="numeric"
                             placeholder='XXXX'
                             maxLength={4}
+                            
                             onChangeText={setCode}    
                         />
                     
