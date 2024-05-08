@@ -42,7 +42,7 @@ export default function Auth() {
             const userDocument = await firestore().collection('users').doc(user.uid).get();
             if (userDocument.exists) {
                 console.log('User exists');
-                navigation.navigate('home');
+                navigation.navigate('activities');
                 // navigate to home screen
             } else {
                 console.log('User does not exist');
@@ -159,8 +159,8 @@ export default function Auth() {
                         <TextInput
                             style={style.inputCode}
                             keyboardType="numeric"
-                            maxLength={6}
                             placeholder='XXXXXX'
+                            maxLength={6}
                             onChangeText={setCode}    
                         />
                     

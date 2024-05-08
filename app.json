@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/after-icon.png",
         "backgroundColor": "#BC203C"
       },
-      "package": "com.nauravalda.afterplusmobile"
+      "package": "com.ppam.afterplus"
     },
     "web": {
       "favicon": "./assets/favicon.png"

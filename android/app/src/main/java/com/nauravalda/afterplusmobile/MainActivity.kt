@@ -1,4 +1,4 @@
-package com.nauravalda.afterplusmobile
+package com.ppam.afterplus
 
 import android.os.Build
 import android.os.Bundle
