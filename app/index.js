@@ -30,10 +30,6 @@ export default function App() {
             <Stack.Screen  
             name="onboarding" component={Onboarding} 
             />
-            <Stack.Screen  
-            name="activities" component={Activities} 
-            />
-        
         </Stack.Navigator>
         
     );
