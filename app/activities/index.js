@@ -1,10 +1,12 @@
 import {View, Image, Text, Pressable, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import { SectionList } from 'react-native-web';
+import { useNavigation } from '@react-navigation/native';
 
 // dummy data for testing (in one day, there are several activities that can be done like cooking in 08.00-09.00, meeting in 10.00-11.00, etc.)
 const activities = [
     {
+        id: '1',
         time: '08.00',
         title: 'Sarapan pagi!',
         desc: 'Masak telor dadar pedas',
@@ -40,7 +42,9 @@ const today = new Date().getDate();
 const current_time = '08.00';
 
 
+
 export default function Activities() {
+    const navigation = useNavigation();
         return (
             <View style={style.container}>
                 <ScrollView>
@@ -58,7 +62,9 @@ export default function Activities() {
                                 {activities.map((activity, index) => {
                                     if (activity.time == current_time){
                                         return (
-                                            <View key={index} style={{...style.activity, backgroundColor: '#FFFFFF'}}>
+                                            <Pressable key={index} style={{...style.activity, backgroundColor: '#FFFFFF'}}
+                                            onPress={() => navigation.navigate('detail', {activity: activity})}
+                                            >
                                                 <Text style={style.title}>{activity.title}</Text>
                                                 <View style={{flexDirection: 'row'}}>
                                                 <Text style={style.desc}>{activity.time}</Text>
@@ -67,12 +73,14 @@ export default function Activities() {
                                                 <Text> </Text>
                                                 <Text style={style.desc}>{activity.desc}</Text>
                                                 </View>
-                                            </View>
+                                            </Pressable>
                                         )
                                     }
                                     else if (activity.category == 'important'){
                                         return (
-                                            <View key={index} style={{...style.activity, backgroundColor: '#D9E2FF'}}>
+                                            <Pressable key={index} style={{...style.activity, backgroundColor: '#D9E2FF'}}
+                                            onPress={() => navigation.navigate('detail', {id: activity.id}, {title: activity.title})}
+                                            >
                                                 <Text style={style.title}>{activity.title}</Text>
                                                 <View style={{flexDirection: 'row'}}>
                                                 <Text style={style.desc}>{activity.time}</Text>
@@ -81,12 +89,14 @@ export default function Activities() {
                                                 <Text> </Text>
                                                 <Text style={style.desc}>{activity.desc}</Text>
                                                 </View>
-                                            </View>
+                                            </Pressable>
                                         )
                                     }
                                     return (
 
-                                        <View key={index} style={style.activity}>
+                                        <Pressable key={index} style={style.activity}
+                                        onPress={() => navigation.navigate('detail', {id: activity.id}, {title: activity.title})}
+                                        >
                                             <Text style={style.title}>{activity.title}</Text>
                                             <View style={{flexDirection: 'row'}}>
                                             <Text style={style.desc} numberOfLines={2}>{activity.time}</Text>
@@ -95,7 +105,7 @@ export default function Activities() {
                                             <Text> </Text>
                                             <Text style={style.desc}>{activity.desc}</Text>
                                             </View>
-                                        </View>
+                                        </Pressable>
                                     )
                                 })}
 

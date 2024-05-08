@@ -7,8 +7,8 @@ import Onboarding from './onboarding';
 import Activities from './activities';
 import Profile from './profile';
 import Finplan from './finplan';
+import Detail from './detail';
 import { NavigationContainer } from '@react-navigation/native';
-import MainScreen from './mainscreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
@@ -18,8 +18,15 @@ export default function App() {
     const user = "ojan";
     if (user) {
         return (
+            <NavigationContainer independent={true}>
+                <Stack.Navigator screenOptions={{headerShown: false}}>
+                    <Stack.Screen name="mytabs" component={MyTabs} />
+                    <Stack.Screen name="detail" component={Detail} />
+                </Stack.Navigator>
 
-              <MyTabs />
+              {/* <MyTabs /> */}
+            </NavigationContainer>
+
           );
     }
     return (
