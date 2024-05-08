@@ -10,31 +10,41 @@ const activities = [
         time: '08.00',
         title: 'Sarapan pagi!',
         desc: 'Masak telor dadar pedas',
-        category: 'daily'
+        category: 'daily',
+        date: '1',
+        tags: 'Masak'
     },
     {
         time: '10.00',
         title: 'Laundry',
         desc: 'Antar laundry ke Jl. Kaliurang km 5',
-        category: 'daily'
+        category: 'daily',
+        date: '1',
+        tags: 'Bersih-bersih'
     },
     {
         time: '13.00',
         title: 'Membaca buku',
         desc: 'Baca buku novel di taman',
-        category: 'daily'
+        category: 'daily',
+        date: '1',
+        tags: 'Hobi'
     }, 
     {
         time: '16.00',
         title: 'Urus Perpindahan nama rumah',
         desc: 'Urus perpindahan nama rumah ke notaris ',
-        category: 'important'
+        category: 'important',
+        date: '1',
+        tags: 'Penting'
     },
     {
         time: '18.00',
         title: 'Menyapu rumah',
         desc: 'Sapu lantai dan bersihkan kamar mandi',
-        category: 'daily'
+        category: 'daily',
+        date: '1',
+        tags: 'Bersih-bersih'
     }
 ];
 
@@ -79,7 +89,7 @@ export default function Activities() {
                                     else if (activity.category == 'important'){
                                         return (
                                             <Pressable key={index} style={{...style.activity, backgroundColor: '#D9E2FF'}}
-                                            onPress={() => navigation.navigate('detail', {id: activity.id}, {title: activity.title})}
+                                            onPress={() => navigation.navigate('detail', {activity: activity})}
                                             >
                                                 <Text style={style.title}>{activity.title}</Text>
                                                 <View style={{flexDirection: 'row'}}>
@@ -95,7 +105,7 @@ export default function Activities() {
                                     return (
 
                                         <Pressable key={index} style={style.activity}
-                                        onPress={() => navigation.navigate('detail', {id: activity.id}, {title: activity.title})}
+                                        onPress={() => navigation.navigate('detail', {activity: activity})}
                                         >
                                             <Text style={style.title}>{activity.title}</Text>
                                             <View style={{flexDirection: 'row'}}>
