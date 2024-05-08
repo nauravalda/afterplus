@@ -11,6 +11,8 @@ import Detail from './detail';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+
+
 export default function App() {
     const Tab = createBottomTabNavigator();
     const Stack = createStackNavigator();

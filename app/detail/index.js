@@ -22,6 +22,8 @@ const recommendation = [{
 
 export default function Detail({ navigation, route }) {
     const [desc, setDesc] = useState(route.params.activity.desc);
+    const dateString = route.params.activity.datetime.date;
+    const day = (new Date(dateString)).getDate();
 
     const renderContent = (content) => {
         const lines = content.split('\n');
@@ -58,11 +60,11 @@ export default function Detail({ navigation, route }) {
             <View style={styles.card}>
                 <View style={{ flexDirection: "row" }}>
                     <Pressable style={styles.day}>
-                        <Text style={styles.font_day}>1</Text>
+                        <Text style={styles.font_day}>{day}</Text>
                     </Pressable>
                     <View style={{ flexDirection: 'column', justifyContent: 'center', marginLeft: 20 }}>
                         <Text style={styles.h3}>{route.params.activity.title}</Text>
-                        <Text style={styles.p}>{route.params.activity.time}</Text>
+                        <Text style={styles.p}>{route.params.activity.datetime.starttime} - {route.params.activity.datetime.endtime}</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
