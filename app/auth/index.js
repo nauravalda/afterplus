@@ -1,39 +1,43 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { createContext } from 'react';
+import { colors } from './../../constants/colors';
+import { supabase } from './../../lib/supabase';
+import { makeRedirectUri } from 'expo-auth-session'
 
+const redirectTo = makeRedirectUri()
+
+const { error } = await supabase.auth.signInWithOtp({
+  email: 'example@email.com',
+  options: {
+    emailRedirectTo: redirectTo,
+  },
+})
 
 
 
 export default function Auth() {
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
     const [show, setShow] = useState(false);
     const [countryCode, setCountryCode] = useState('+62');
     const [confirm, setConfirm] = useState(null);
     const [code, setCode] = useState('');
     const navigation = useNavigation();
+    const [isLogged, setIsLogged] = useState(false);
+    const [user, setUser] = useState(null);
+    
 
-    const signInWithPhoneNumber = async () => {
+    const signInWithEmail = async () => {
         try {
-            const confirmation = await auth().signInWithPhoneNumber(formatPhoneNumber(phoneNumber, countryCode));
-            setConfirm(confirmation);
-        } catch (e) {
-            console.error("Error sending code: ", e);
+
         }
     };
 
-    const formatPhoneNumber = (phoneNumber, countryCode) => {
-        if (phoneNumber[0] === '0') {
-            phoneNumber = phoneNumber.slice(1);
-        }
-        return countryCode + phoneNumber;
-
-
-    }
     const confirmCode = async () => {
         try {
             const userCredential = await confirm.confirm(code);
@@ -41,8 +45,19 @@ export default function Auth() {
             // check if user exists in firestore
             const userDocument = await firestore().collection('users').doc(user.uid).get();
             if (userDocument.exists) {
-                console.log('User exists');
-                navigation.navigate('activities');
+                // check if user has completed identity
+                if (userDocument.data().name && userDocument.data().birthdate) {
+                    console.log('User exists');
+                    setIsLogged(true);
+                    setUser(userDocument.data());
+
+                    navigation.navigate('activities', { user: userDocument.data() });}
+                else {
+                    console.log('User exists but not completed identity');
+                    setIsLogged(true);
+                    setUser(userDocument.data());
+                    navigation.navigate('onboarding', { id: user.uid });
+                }
                 // navigate to home screen
             } else {
                 console.log('User does not exist');
@@ -50,7 +65,8 @@ export default function Auth() {
                 await firestore().collection('users').doc(user.uid).set({
                     phoneNumber: user.phoneNumber,
                 });
-                navigation.navigate('onboarding');
+                setIsLogged(true);
+                navigation.navigate('onboarding', { id: user.uid});
                 // navigate to onboarding screen
 
             }
@@ -66,10 +82,11 @@ export default function Auth() {
 
     return (
 
+
         <View style={style.container}>
 
             <Icon
-                color="#201B13"
+                color={colors.primary}
                 containerStyle={{}}
                 disabledStyle={{}}
                 iconProps={{}}
@@ -82,50 +99,14 @@ export default function Auth() {
             />
             {!confirm ?
             (<View style={style.content}>
-                <Text style={style.h1}>Masuk</Text>
-                <Text style={style.text}>Masuk dengan nomor telepon Anda untuk mulai mengakses After+ dan dapatkan dukungan terbaik dalam menghadapi perubahan hidup</Text>
+                <Text style={style.h1}>Masukkan Emailmu</Text>
+                <Text style={style.text}>Masukkan emailmu! Kami akan kirimkan kode verifikasi untuk melanjutkan.</Text>
                 <View style={style.form}>
                     <View style={style.input}>
-                        <View style={style.countryPicker}>
-                            <TouchableOpacity
-                                onPress={() => setShow(true)}
-                                style={{
-                                    width: 80,
-                                    height: 60,
-                                    borderColor: '#817567',
-                                    borderWidth: 1,
-                                    borderRadius: 10,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-
-                                }}
-                            >
-                                <Text style={{
-                                    fontSize: 20,
-                                    fontWeight: 500,
-                                    lineHeight: 24,
-                                    letterSpacing: 0.1,
-                                    alignSelf: 'center',
-                                    borderColor: '#817567',
-                                    borderRadius: 10,
-
-                                }}>
-                                    {countryCode}
-                                </Text>
-                            </TouchableOpacity>
-
-                            <CountryPicker
-                                show={show}
-                                // when picker button press you will get the country object with dial code
-                                pickerButtonOnPress={(item) => {
-                                    setCountryCode(item.dial_code);
-                                    setShow(false);
-                                }}
-                                showOnly={["ID", "US", "IN", "JP", "KR", "CN"]}
-                            />
-                        </View>
+                        
+                           
                         <TextInput
-                            placeholder="Nomor Telepon"
+                            placeholder="Email"
                             value={phoneNumber}
                             onChangeText={setPhoneNumber}
                             style={style.inputBox}
@@ -137,7 +118,7 @@ export default function Auth() {
                         onPress={signInWithPhoneNumber}
                     >
                         <Text style={{
-                            color: '#FFF8F3',
+                            color: colors.background,
                             fontSize: 14,
                             fontWeight: 500,
                             letterSpacing: 0.1,
@@ -185,7 +166,7 @@ export default function Auth() {
 const style = {
     container: {
         flex: 1,
-        backgroundColor: "#FFF8F3",
+        backgroundColor: colors.background,
         padding: 24,
     },
     content: {
@@ -201,16 +182,16 @@ const style = {
         marginBottom: 16,
     },
     h1: {
-        color: '#281800',
+        color: colors.onsurface,
         fontFamily: 'Roboto',
-        fontSize: 32,
+        fontSize: 22,
         fontWeight: 800,
         lineHeight: 36, /* 62.5% */
         letterSpacing: 0.1,
         marginBottom: 10,
     },
     text: {
-        color: '#281800',
+        color: colors.onsurface,
         fontFamily: 'Roboto',
         fontSize: 12,
         fontWeight: 500,
@@ -224,9 +205,9 @@ const style = {
         flexDirection: 'column',
 
     }, inputBox: {
-        width: 240,
+        width: '100%',
         height: 60,
-        borderColor: '#817567',
+        borderColor: colors.outline,
         borderWidth: 1,
         borderRadius: 10,
         justifyContent: 'center',
@@ -234,22 +215,11 @@ const style = {
         paddingLeft: 16,
         fontSize: 16,
     }, submitbtn: {
-        backgroundColor: '#DBA140',
+        backgroundColor: colors.primary,
         borderRadius: 50,
         height: 48,
         justifyContent: 'center',
         alignItems: 'center',
-    }, inputCode: {
-        height: 60,
-        borderColor: '#817567',
-        borderWidth: 1,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 24,
-        marginBottom: 20,
-        textAlign: 'center',
-        letterSpacing: 10,
     }
 
 };

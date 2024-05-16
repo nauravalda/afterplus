@@ -1,20 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// Import necessary modules
+import React, { useState } from 'react';
+import { UserContext } from './app/userContext'; // Import your user context
+import App from './app/index'; // Import your main application component
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+// Define your top-level component
+export default function Main() {
+    // Define user state here or get it from where you fetch user data
+    const [user, setUser] = useState(null);
+
+    // Return your component tree with UserContext.Provider wrapping it
+    return (
+        <UserContext.Provider value={{ user, setUser }}>
+            <App /> {/* Your main application component */}
+        </UserContext.Provider>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

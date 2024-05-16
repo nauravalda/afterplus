@@ -1,8 +1,12 @@
 import {View, Text, Pressable, TextInput, Image} from 'react-native';
 import React, {useState} from 'react';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import firestore from '@react-native-firebase/firestore';
+import { Paragraph } from 'react-native-paper';
 
-export default function Onboarding() {
+
+
+export default function Onboarding({navigation, route}) {
     const [nextstep, setNextstep] = useState(false);
     const [name, setName] = useState('');
     const [birthdate, setBirthdate] = useState(new Date());
@@ -15,6 +19,18 @@ export default function Onboarding() {
     const onCancelSingle = () => {
         setOpen(false);
     }
+
+    const saveData = async () => {
+        const user = firestore().collection('users').doc(route.params.id);
+        await user.set({
+            name: name,
+            birthdate: birthdate,
+        });
+    }
+
+
+
+
 
     return (
         <View style={style.container}>
@@ -31,7 +47,7 @@ export default function Onboarding() {
                         placeholder='Nama'    
                     />
                     <Pressable style={style.inputBox} onPress={() => setOpen(true)}>
-                        <Text>{(birthdate=='') ? ('Tanggal lahir') : (birthdate.toISOString())}</Text>
+                        <Text>{(birthdate=='') ? ('Tanggal lahir') : (birthdate.toString())}</Text>
                     </Pressable>
 
                     <DateTimePickerModal
@@ -46,7 +62,10 @@ export default function Onboarding() {
                 <Pressable 
                     disabled={name=='' && birthdate==''}
                     style={style.submitbtn}
-                    onPress={() => setNextstep(true)}
+                    onPress={() => {
+                        setNextstep(true);
+                        saveData();
+                    }}
                 >
                     <Text style={{
                         color: '#FFF8F3',
@@ -97,7 +116,11 @@ export default function Onboarding() {
                     
                 <Pressable 
                     style={style.submitbtn}
-                    onPress={() => setNextstep(true)}
+                    onPress={() => {
+                        setNextstep(true);
+                        navigation.navigate('activities', {id: route.params.id});
+
+                    }}
                 >
                     <Text style={{
                         color: '#FFF8F3',

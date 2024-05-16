@@ -1,5 +1,5 @@
 import { Text, View, Pressable, Image } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import {Link, Stack} from 'expo-router';
 import { createStackNavigator } from '@react-navigation/stack';
 import Auth from './auth';
@@ -13,10 +13,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 
+const user = null;
+
 export default function App() {
-    const Tab = createBottomTabNavigator();
     const Stack = createStackNavigator();
-    const user = "ojan";
     if (user) {
         return (
             <NavigationContainer independent={true}>
@@ -24,8 +24,6 @@ export default function App() {
                     <Stack.Screen name="mytabs" component={MyTabs} />
                     <Stack.Screen name="detail" component={Detail} />
                 </Stack.Navigator>
-
-              {/* <MyTabs /> */}
             </NavigationContainer>
 
           );
