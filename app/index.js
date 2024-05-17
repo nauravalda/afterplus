@@ -7,11 +7,13 @@ import Onboarding from './onboarding';
 import Beranda from './beranda';
 import Profile from './profile';
 import Finplan from './finplan';
-import Detail from './detail';
 import Options from './booking/options';
+import Booking_area_pemakaman from './booking/detail/booking_area_pemakaman';
+import Detail from './booking/detail/detail';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from './../constants/colors';
+import {BookingProvider}  from './booking/booking-context';
 
 
 
@@ -22,11 +24,15 @@ export default function App() {
     if (user) {
         return (
             <NavigationContainer independent={true}>
+              <BookingProvider>
                 <Stack.Navigator screenOptions={{headerShown: false}}>
                     <Stack.Screen name="mytabs" component={MyTabs} />
-                    <Stack.Screen name="detail" component={Detail} />
-                    <Stack.Screen name="options" component={Options} />
+                      <Stack.Screen name="options" component={Options} />
+                      <Stack.Screen name="booking_area_pemakaman" component={Booking_area_pemakaman} />
+                      <Stack.Screen name="detail" component={Detail} />
+                    
                 </Stack.Navigator>
+                </BookingProvider>
             </NavigationContainer>
 
           );

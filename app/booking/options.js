@@ -1,14 +1,15 @@
-import {View, Text, Pressable, TextInput, StatusBar, Image} from 'react-native';
-import React, {useState} from 'react';
+import { View, Text, Pressable, TextInput, StatusBar, Image } from 'react-native';
+import React, { useState } from 'react';
 import { colors } from '../../constants/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { shadow } from 'react-native-paper';
+import { useBooking } from './booking-context';
 
 const options = [
     {
-        label: 'Layanan Sebelum Pemakaman', 
+        label: 'Layanan Sebelum Pemakaman',
         value: 'layanan_sebelum_pemakaman',
         contents: [
             {
@@ -29,7 +30,7 @@ const options = [
     {
         label: 'Layanan Saat Pemakaman',
         value: 'layanan_saat_pemakaman',
-        contents:[
+        contents: [
             {
                 label: 'Sarana Prasarana Pemakaman',
                 value: 'sarana_prasarana_pemakaman',
@@ -65,7 +66,7 @@ const options = [
                 value: 'perawatan_makam',
                 desc: 'Pemeliharaan lahan kuburan dan penataan taman makam',
                 icon: require('./../../assets/perawatan_makam.png')
-            }, 
+            },
             {
                 label: 'Konseling Mental',
                 value: 'konseling_mental',
@@ -78,7 +79,12 @@ const options = [
 ]
 export default function Options() {
     const navigation = useNavigation();
-    return(
+    const { addedContents, setAddedContents } = useBooking();
+    const getIdsByVal = (val) => {
+        const item = addedContents.find((item) => item.val === val);
+        return item ? item.id : [];
+    }
+    return (
         <View style={style.container}>
             <StatusBar backgroundColor={colors.surfacecontainer} barStyle="dark-content" />
             <Icon
@@ -90,127 +96,173 @@ export default function Options() {
                 name="west"
                 size={24}
                 type="material"
-                style={{ alignSelf: 'flex-start', marginLeft:20, marginTop: 20}}
+                style={{ alignSelf: 'flex-start', marginLeft: 20, marginTop: 20 }}
                 onPress={() => navigation.goBack()}
             />
             <ScrollView>
-                <View style={{paddingHorizontal: 20}}>
-            <Text style={style.h1}>Isi Layanan yang Diinginkan</Text>
-            <Text style={{...style.text, marginBottom: 20}}>Isi layanan pemakaman yang kamu butuhkan. Kamu dapat mengisi satu hingga semua layanan berbeda.</Text>
-            </View>
-            <View style={{alignSelf: 'center', width: '90%'}}>
-                {options.map((item, index) => {
-                    const [isPressed, setIsPressed] = useState(false);
-                    return(
+                <View style={{ paddingHorizontal: 20 }}>
+                    <Text style={style.h1}>Isi Layanan yang Diinginkan</Text>
+                    <Text style={{ ...style.text, marginBottom: 20 }}>Isi layanan pemakaman yang kamu butuhkan. Kamu dapat mengisi satu hingga semua layanan berbeda.</Text>
+                </View>
+                <View style={{ alignSelf: 'center', width: '90%' }}>
+                    {options.map((item, index) => {
+                        const [isPressed, setIsPressed] = useState(false);
+                        return (
 
-                    <View key={index} style={style.option}>
-                        <Pressable style={{
-                            padding: 10,
-                            marginBottom: 20,
-                            borderBottomWidth: 1,
-                            borderColor: colors.outlinevariant,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between'
-                        }}
-                        onPress={() => setIsPressed(!isPressed)}
-                        >
-                            <Text style={style.h2}>{item.label}</Text>
-                            {isPressed ? 
-                            (<Icon
-                                color={'black'}
-                                containerStyle={{}}
-                                disabledStyle={{}}
-                                iconProps={{}}
-                                iconStyle={{}}
-                                name="arrow-drop-up"
-                                size={24}
-                                type="material"
-                                style={{ alignSelf: 'flex-start' }}
-                            />) :
-                            (<Icon
-                                color={'black'}
-                                containerStyle={{}}
-                                disabledStyle={{}}
-                                iconProps={{}}
-                                iconStyle={{}}
-                                name="arrow-drop-down"
-                                size={24}
-                                type="material"
-                                style={{ alignSelf: 'flex-start' }}
-                            />)
-                            }
-                        
-                        </Pressable>  
-
-                        { isPressed ?
-                            (item.contents.map((content, index) => (
-                                <Pressable key={index} style={style.sub_option}>
-                                    <Image source={content.icon} style={style.sub_option_img}/>
-                                    <View style={{flex: 1}}>
-                                    <Text style={style.h3}>{content.label}</Text>
-                                    <Text style={style.text} numberOfLines={2} >{content.desc}</Text>
-                                    </View>
-                                    <View style={{
-                                        width: 36,
-                                        height: 36,
-                                        backgroundColor: colors.primary,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        alignSelf:'flex-end',
-                                        left: 10,
-                                        top: 10,
-                                        borderBottomEndRadius: 15,
-                                        borderTopStartRadius: 15,
-
-                                    }}>
-                                        <Icon
-                                            color={colors.surfacecontainer}
+                            <View key={index} style={style.option}>
+                                <Pressable style={{
+                                    padding: 10,
+                                    marginBottom: 20,
+                                    borderBottomWidth: 1,
+                                    borderColor: colors.outlinevariant,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between'
+                                }}
+                                    onPress={() => setIsPressed(!isPressed)}
+                                >
+                                    <Text style={style.h2}>{item.label}</Text>
+                                    {isPressed ?
+                                        (<Icon
+                                            color={'black'}
                                             containerStyle={{}}
                                             disabledStyle={{}}
                                             iconProps={{}}
                                             iconStyle={{}}
-                                            name="add"
-                                            size={20}
+                                            name="arrow-drop-up"
+                                            size={24}
                                             type="material"
-                                        />
-                                    </View>
+                                            style={{ alignSelf: 'flex-start' }}
+                                        />) :
+                                        (<Icon
+                                            color={'black'}
+                                            containerStyle={{}}
+                                            disabledStyle={{}}
+                                            iconProps={{}}
+                                            iconStyle={{}}
+                                            name="arrow-drop-down"
+                                            size={24}
+                                            type="material"
+                                            style={{ alignSelf: 'flex-start' }}
+                                        />)
+                                    }
+
                                 </Pressable>
-                            ))) : (null)
-                        }
-                    </View>
-                )}
-            )}
-            </View>
+
+                                {isPressed ?
+                                    (item.contents.map((content, index) => (
+                                        <Pressable key={index} style={style.sub_option}
+                                            onPress={() => navigation.navigate('booking_area_pemakaman')}
+                                        >
+                                            <Image source={content.icon} style={style.sub_option_img} />
+                                            <View style={{ flex: 1 }}>
+                                                <Text style={style.h3}>{content.label}</Text>
+                                                <Text style={style.text} numberOfLines={2} >{content.desc}</Text>
+                                            </View>
+                                            {getIdsByVal(content.value).length > 0 ? (
+                                                <View style={{left:10}}>
+                                                <View style={{
+                                                    width: 36,
+                                                    height: 44,
+                                                    backgroundColor: colors.primary,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignSelf: 'flex-end',
+                                                    borderTopEndRadius: 15,
+                                                    borderTopStartRadius: 15,
+
+                                                }}>
+                                                    <Text style={{color: colors.surfacecontainer, fontWeight: 500}}>{getIdsByVal(content.value).length}</Text>
+
+                                                    
+                                                    </View>
+                                                    <View style={{
+                                                    width: 36,
+                                                    height: 36,
+                                                    backgroundColor: colors.primary,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignSelf: 'flex-end',
+                                                    borderBottomEndRadius: 15,
+
+                                                }}>
+                                                    <Icon
+                                                        color={colors.surfacecontainer}
+                                                        containerStyle={{}}
+                                                        disabledStyle={{}}
+                                                        iconProps={{}}
+                                                        iconStyle={{}}
+                                                        name="east"
+                                                        size={20}
+                                                        type="material"
+                                                    />
+                                                    </View>
+                                                
+                                                </View>
+                                            ) : (
+                                                <View style={{
+                                                    width: 36,
+                                                    height: 36,
+                                                    backgroundColor: colors.primary,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    alignSelf: 'flex-end',
+                                                    left: 10,
+                                                    top: 10,
+                                                    borderBottomEndRadius: 15,
+                                                    borderTopStartRadius: 15,
+
+                                                }}>
+                                                    <Icon
+                                                        color={colors.surfacecontainer}
+                                                        containerStyle={{}}
+                                                        disabledStyle={{}}
+                                                        iconProps={{}}
+                                                        iconStyle={{}}
+                                                        name="add"
+                                                        size={20}
+                                                        type="material" />
+                                                </View>
+
+                                            )}
+
+                                        </Pressable>
+                                    ))) : (null)
+                                }
+                            </View>
+                        )
+                    }
+                    )}
+                </View>
             </ScrollView>
         </View>
     )
 }
 
 const style = {
-    container:{
+    container: {
         backgroundColor: colors.surfacecontainer,
         flex: 1,
 
     },
-    h1:{
+    h1: {
         fontSize: 22,
         marginBottom: 10,
         marginTop: 20,
         fontWeight: 700,
-    }, text:{
+    }, text: {
         fontSize: 13,
         color: colors.onsurfacevariant,
         fontWeight: 400,
-    }, h2:{
+    }, h2: {
         fontSize: 14,
         fontWeight: 600,
-    }, h3:{
+    }, h3: {
         fontSize: 15,
         fontWeight: 600,
-    }, sub_option:{
+    }, sub_option: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent : 'center',
+        justifyContent: 'center',
         padding: 10,
         height: 80,
         backgroundColor: colors.surfacecontainer,
@@ -224,12 +276,12 @@ const style = {
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-    }, sub_option_img:{
+    }, sub_option_img: {
         width: 40,
         height: 40,
         marginRight: 10,
-        
+
     }
-    
-    
+
+
 }
