@@ -42,7 +42,9 @@ export default function Beranda() {
                     <Text style={style.h1}>Pemesanan</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     <View style={{alignItems: 'center'}}>
-                        <Pressable style={style.small_pressable}>
+                        <Pressable style={style.small_pressable}
+                        onPress={() => navigation.navigate('options')}
+                        >
                             <Image source={require('./../../assets/home-pemakaman.png')}
                                 style={{ width: '100%', height: 58, borderRadius: 20}}
                             />

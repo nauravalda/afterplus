@@ -8,6 +8,7 @@ import Beranda from './beranda';
 import Profile from './profile';
 import Finplan from './finplan';
 import Detail from './detail';
+import Options from './booking/options';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from './../constants/colors';
@@ -24,6 +25,7 @@ export default function App() {
                 <Stack.Navigator screenOptions={{headerShown: false}}>
                     <Stack.Screen name="mytabs" component={MyTabs} />
                     <Stack.Screen name="detail" component={Detail} />
+                    <Stack.Screen name="options" component={Options} />
                 </Stack.Navigator>
             </NavigationContainer>
 
