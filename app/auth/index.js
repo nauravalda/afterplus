@@ -8,20 +8,12 @@ import { useNavigation } from '@react-navigation/native';
 import { createContext } from 'react';
 import { colors } from './../../constants/colors';
 import { supabase } from './../../lib/supabase';
-import { makeRedirectUri } from 'expo-auth-session'
 
-const redirectTo = makeRedirectUri()
-
-const { error } = await supabase.auth.signInWithOtp({
-  email: 'example@email.com',
-  options: {
-    emailRedirectTo: redirectTo,
-  },
-})
 
 
 
 export default function Auth() {
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [show, setShow] = useState(false);
     const [countryCode, setCountryCode] = useState('+62');
@@ -33,9 +25,6 @@ export default function Auth() {
     
 
     const signInWithEmail = async () => {
-        try {
-
-        }
     };
 
     const confirmCode = async () => {
@@ -51,7 +40,7 @@ export default function Auth() {
                     setIsLogged(true);
                     setUser(userDocument.data());
 
-                    navigation.navigate('activities', { user: userDocument.data() });}
+                    navigation.navigate('Beranda', { user: userDocument.data() });}
                 else {
                     console.log('User exists but not completed identity');
                     setIsLogged(true);
@@ -115,7 +104,7 @@ export default function Auth() {
                     </View>
                     <Pressable 
                         style={style.submitbtn}
-                        onPress={signInWithPhoneNumber}
+                        onPress={signInWithEmail}
                     >
                         <Text style={{
                             color: colors.background,

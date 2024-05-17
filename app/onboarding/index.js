@@ -118,7 +118,7 @@ export default function Onboarding({navigation, route}) {
                     style={style.submitbtn}
                     onPress={() => {
                         setNextstep(true);
-                        navigation.navigate('activities', {id: route.params.id});
+                        navigation.navigate('Beranda', {id: route.params.id});
 
                     }}
                 >

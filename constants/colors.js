@@ -8,6 +8,7 @@ export const colors = {
 
 
     primary: "#DA384F",
+    primarycontainer: "#FFDADA",
     outline: "#857373",
     outlinevariant: "#D7C1C1",
     secondarycontainer: "#AFF1C4",

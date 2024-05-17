@@ -4,16 +4,17 @@ import {Link, Stack} from 'expo-router';
 import { createStackNavigator } from '@react-navigation/stack';
 import Auth from './auth';
 import Onboarding from './onboarding';
-import Activities from './activities';
+import Beranda from './beranda';
 import Profile from './profile';
 import Finplan from './finplan';
 import Detail from './detail';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { colors } from './../constants/colors';
 
 
 
-const user = null;
+const user = true;
 
 export default function App() {
     const Stack = createStackNavigator();
@@ -45,15 +46,15 @@ export default function App() {
         const Tab = createBottomTabNavigator();
         return (
           <Tab.Navigator
-            initialRouteName="activities"
+            initialRouteName="beranda"
             screenOptions={{
               
 
               headerShown: false,
-              tabBarStyle: { backgroundColor: '#F8ECDF', height: 80},
+              tabBarStyle: { backgroundColor: colors.surfacecontainer, height: 80},
                 tabBarLabelStyle: styles.label,
                 tabBarIconStyle: {width: 24, height: 24},
-                tabBarActiveBackgroundColor: '#ebe0d5'
+                tabBarActiveTintColor: colors.primarycontainer,
 
                 
                     
@@ -62,12 +63,12 @@ export default function App() {
             
           >
             <Tab.Screen
-              name="activities"
-              component={Activities}
+              name="beranda"
+              component={Beranda}
               options={{
-                tabBarLabel: 'Aktivitas',
+                tabBarLabel: 'Beranda',
                 tabBarIcon: ({ color, size }) => (
-                  <Image source={require('./../assets/navbar-1.png')} style={styles.icon} />
+                  <Image source={require('./../assets/navbar-1.png')} style={{...styles.icon, width: 30}} />
                 ),
               }}
             />
@@ -75,9 +76,9 @@ export default function App() {
               name="finplan"
               component={Finplan}
               options={{
-                tabBarLabel: 'Keuangan',
+                tabBarLabel: 'Pemesanan',
                 tabBarIcon: ({ color, size }) => (
-                  <Image source={require('./../assets/navbar-2.png')} style={styles.icon}/>
+                  <Image source={require('./../assets/navbar-2.png')} style={{...styles.icon, width: 20}}/>
                 ),
                 // tabBarBadge: 3,
               }}
@@ -88,7 +89,7 @@ export default function App() {
               options={{
                 tabBarLabel: 'Profil',
                 tabBarIcon: ({ color, size }) => (
-                    <Image source={require('./../assets/navbar-3.png')} style={styles.icon}/>
+                    <Image source={require('./../assets/navbar-3.png')} style={{...styles.icon, width: 25, height: 34}}/>
                 ),
               }}
             />
@@ -99,18 +100,16 @@ export default function App() {
 
 const styles = {
     navbar : {
-        backgroundColor: '#F8ECDF',
-        height: 80,
+
     },
     label:{
         fontSize: 12,
-        color: '#201B13',
+        color: colors.onsurface,
         fontWeight: 600,
         paddingBottom: 20,    
     },
     icon:{
-        width: 24,
-        height: 24,
+        height: 25,
         marginTop: 18,
 
     }
