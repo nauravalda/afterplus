@@ -5,29 +5,29 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 
 // dummy data
-const pesanan_berjalan = [
+const pesanan_selesai = [
     {
-        title: 'Pemakaman',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x200'
+        kode: 'Pemakaman',
+        content: 'Mobil jenazah, keranda, kain kafan, pengurus jenazah, ...',
+        orderdate: '12/12/2023',
     },
     {
-        title: 'Perawatan Makam',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x202'
+        kode: 'Perawatan Makam',
+        content: 'Pemasangan tembok, penghijauan rumput, penambahan tanaman',
+        orderdate: '20/12/2023',
     },
     {
-        title: 'Pemakaman',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x240'
+        kode: 'Konseling Mental',
+        content: 'Konseling pada tanggal 15 Desember 2023 secara virtual.',
+        orderdate: '12/12/2023',
     }
 ]
 
-const pesanan_selesai = [
+const pesanan_berjalan = [
     { 
-        title: 'Anjay',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x200'
+        kode: 'Pemakaman',
+        content: 'Area pemakaman, kain kafan',
+        orderdate: '02/01/2024',
     },
 
 ]
@@ -59,18 +59,24 @@ export default function Finplan() {
             <ScrollView>
                 {activeButton === 'berjalan' ? pesanan_berjalan.map((item, index) => (
                     <Pressable key={index} style={style.feed}>
-                        <Image source={{uri: item.img_url}} style={style.feed_img}/>
-                        <View style={{padding: 10}}>
-                            <Text style={style.feed_title}>{item.title}</Text>
+                        <View style={{padding: 15, width: '100%'}}>
+                            <Text style={style.feed_title}>{item.kode}</Text>
                             <Text style={style.feed_content}>{item.content}</Text>
+                            <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 5}}>
+                            <Text style={{color: colors.outline, fontSize: 12}}>Order date:   </Text>
+                            <Text style={style.feed_date}>{item.orderdate}</Text>
+                            </View>
                         </View>
                     </Pressable>
                 )) : pesanan_selesai.map((item, index) => (
                     <Pressable key={index} style={style.feed}>
-                        <Image source={{uri: item.img_url}} style={style.feed_img}/>
-                        <View style={{padding: 10}}>
-                            <Text style={style.feed_title}>{item.title}</Text>
+                        <View style={{padding: 15, width: '100%'}}>
+                            <Text style={style.feed_title}>{item.kode}</Text>
                             <Text style={style.feed_content}>{item.content}</Text>
+                            <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 5}}>
+                            <Text style={{color: colors.outline, fontSize: 12}}>Order date:   </Text>
+                            <Text style={style.feed_date}>{item.orderdate}</Text>
+                            </View>
                         </View>
                     </Pressable>
                 ))    
@@ -90,6 +96,33 @@ const style = {
         fontSize: 17,
         fontWeight: 500,
 
+    }, feed:{
+        backgroundColor: colors.primarycontainer,
+        borderRadius: 10,
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%'
+    }, feed_title:{
+        fontSize: 15,
+        fontWeight: 500,
+    }, feed_content:{
+        borderTopWidth: 0.5,
+        borderColor: colors.outline,
+        fontSize: 13,
+        fontWeight: 400,
+        color: colors.onsurfacevariant,
+        width: '100%',
+        paddingTop: 8,
+        marginTop: 4,
+    }, segmented_text:{
+        fontSize: 15,
+        fontWeight: 500,
+        color: colors.onsurfacevariant,
+    }, feed_date:{
+        fontSize: 12,
+        color: colors.primary,
+        fontWeight: 500,
     }
 
 }

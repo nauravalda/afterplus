@@ -14,11 +14,13 @@ const contents=[
         id: 0,
         name: 'Kain Kafan',
         agama: 'Islam',
-        desc: 'Kain Kafan adalah kain yang digunakan untuk mengkafani jenazah',
+        description: 'Kain Kafan adalah kain yang digunakan untuk mengkafani jenazah',
         img_url: 'https://placebeard.it/300x200',
         range_price: 'Rp 200.000 - Rp 500.000',
         contents: 
+
             {
+                description: 'Kain Kafan adalah kain yang digunakan untuk mengkafani jenazah',
                 img_url: 'https://placebeard.it/300x200',
                 variants: [
                     {
@@ -43,11 +45,12 @@ const contents=[
         id: 1,
         name: 'Peti Mati',
         agama: 'Kristen Katolik',
-        desc: 'Peti mati adalah peti yang digunakan untuk menaruh jenazah',
+        description: 'Peti mati adalah peti yang digunakan untuk menaruh jenazah',
         img_url: 'https://placebeard.it/300x202',
         range_price: 'Rp 2.000.000 - Rp 10.000.000',
         contents: 
             {
+                description: 'Peti mati adalah peti yang digunakan untuk menaruh jenazah',
                 img_url: 'https://placebeard.it/300x200',
                 variants: [
                     {
@@ -70,11 +73,12 @@ const contents=[
         id: 2,
         name: 'Guci Abu',
         agama: 'Buddha Hindu',
-        desc: 'Guci Abu adalah guci yang berisi abu jenazah',
+        description: 'Guci Abu adalah guci yang berisi abu jenazah',
         img_url: 'https://placebeard.it/300x204',
         range_price: 'Rp 500.000 - Rp 2.000.000',
         contents: 
             {
+                description: 'Guci Abu adalah guci yang berisi abu jenazah',
                 img_url: 'https://placebeard.it/300x200',
                 variants: [
                     {
@@ -110,20 +114,28 @@ export default function Perlengkapan_pemakaman() {
     }, []);
     
     const getIdsByVal = (val) => {
-        const item = addedContents.find((item) => item.val === val);
+        if (!addedContents['booking']) {
+            console.error("addedContents['booking'] is undefined");
+            return [];
+        }
+        const item = addedContents['booking'].find((item) => item.val === val);
         return item ? item.id : [];
-    }
+    };
 
     const removeIdFromVal = (val, idToRemove) => {
-        setAddedContents(prevContents => prevContents.map(content => {
-            if (content.val === val) {
-                return {
-                    ...content,
-                    id: content.id.filter(item => item.id !== idToRemove)
-                };
-            }
-            return content;
-        }));
+        setAddedContents(prevContents => {
+            const newContents = { ...prevContents };
+            newContents['booking'] = newContents['booking'].map(content => {
+                if (content.val === val) {
+                    return {
+                        ...content,
+                        id: content.id.filter(item => item.id !== idToRemove)
+                    };
+                }
+                return content;
+            });
+            return newContents;
+        });
     };
 
     const formatRupiah = (angka) => {
@@ -156,7 +168,7 @@ export default function Perlengkapan_pemakaman() {
                     style={{ alignSelf: 'flex-start' }}
                     onPress={() => navigation.goBack()}
                 />
-                <Text style={style.h1}>Booking Area Pemakaman</Text>
+                <Text style={style.h1}>Perlengkapan Pemakaman</Text>
             </View>
 
             {/* added contents */}
@@ -212,7 +224,7 @@ export default function Perlengkapan_pemakaman() {
             <Pressable style={style.searchbar}>
 
 
-                    <Text style={{ color: colors.onsurface, marginLeft: 10 }}>Cari di area sekitarmu!</Text>
+                    <Text style={{ color: colors.onsurface, marginLeft: 10 }}>Cari perlengkapan yang kamu mau!</Text>
                     <Icon
                         color={colors.onsurface}
                         containerStyle={{}}
@@ -230,13 +242,13 @@ export default function Perlengkapan_pemakaman() {
                     <Pressable key={index} style={style.card}
                     onPress={() => {
                         
-                        navigation.navigate('detail', {item: item});
+                        navigation.navigate('detail', {item: item, val: 'perlengkapan_pemakaman'});
                     }}
                     >
                         <Image source={{ uri: item.img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
                         <View style={{ paddingLeft: 15, paddingRight: 15, width: '73%' }}>
                             <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{item.name}</Text>
-                            <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{item.location}</Text>
+                            <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{item.description}</Text>
                             <Text style={{ color: colors.secondary, fontSize: 12, fontWeight: 500}}>{item.range_price}</Text>
 
                         </View>
@@ -265,13 +277,13 @@ export default function Perlengkapan_pemakaman() {
                     </Pressable>
                 ))}
 
-                {getIdsByVal('booking_area_pemakaman').length > 0 ? (
+                {getIdsByVal('perlengkapan_pemakaman').length > 0 ? (
                     <View style={{height: 100}}></View>
                 ) : (null
                 )}
                 
             </ScrollView>
-            {getIdsByVal('booking_area_pemakaman').length > 0 ? (
+            {getIdsByVal('perlengkapan_pemakaman').length > 0 ? (
                 <View style={{bottom: 0, zIndex: 100, position: 'absolute', width:'100%', alignItems: 'center', borderTopStartRadius: 40, borderTopRightRadius: 40, borderWidth: 0.5, borderColor: colors.outlinevariant, backgroundColor: colors.surfacecontainer
                 
                 }}>

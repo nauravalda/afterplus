@@ -2,30 +2,32 @@ import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native
 import React, { useState, useContext } from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { CountryPicker } from 'react-native-country-codes-picker';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { createContext } from 'react';
 import { colors } from './../../constants/colors';
-import { supabase } from './../../lib/supabase';
 
 
 
 
 export default function Auth() {
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [email, setEmail] = useState('');
-    const [show, setShow] = useState(false);
-    const [countryCode, setCountryCode] = useState('+62');
     const [confirm, setConfirm] = useState(null);
     const [code, setCode] = useState('');
     const navigation = useNavigation();
-    const [isLogged, setIsLogged] = useState(false);
-    const [user, setUser] = useState(null);
     
 
-    const signInWithEmail = async () => {
+    const signInWithPhoneNumber = async () => {
+        try {
+            const confirmation = await auth().signInWithPhoneNumber(formatPhoneNumber(phoneNumber));
+            setConfirm(confirmation);
+        } catch (e) {
+            console.error("Error sending code: ", e);
+        }
     };
+
+    const formatPhoneNumber = (phoneNumber) => {
+        return `+${phoneNumber}`;
+    }
 
     const confirmCode = async () => {
         try {
@@ -34,19 +36,8 @@ export default function Auth() {
             // check if user exists in firestore
             const userDocument = await firestore().collection('users').doc(user.uid).get();
             if (userDocument.exists) {
-                // check if user has completed identity
-                if (userDocument.data().name && userDocument.data().birthdate) {
-                    console.log('User exists');
-                    setIsLogged(true);
-                    setUser(userDocument.data());
-
-                    navigation.navigate('Beranda', { user: userDocument.data() });}
-                else {
-                    console.log('User exists but not completed identity');
-                    setIsLogged(true);
-                    setUser(userDocument.data());
-                    navigation.navigate('onboarding', { id: user.uid });
-                }
+                console.log('User exists');
+                navigation.navigate('activities');
                 // navigate to home screen
             } else {
                 console.log('User does not exist');
@@ -54,8 +45,7 @@ export default function Auth() {
                 await firestore().collection('users').doc(user.uid).set({
                     phoneNumber: user.phoneNumber,
                 });
-                setIsLogged(true);
-                navigation.navigate('onboarding', { id: user.uid});
+                navigation.navigate('onboarding');
                 // navigate to onboarding screen
 
             }
@@ -84,18 +74,26 @@ export default function Auth() {
                 size={24}
                 type="material"
                 style={{ alignSelf: 'flex-start' }}
-                onPress={backToPhoneInput}
-            />
-            {!confirm ?
+                onPress={
+                            () => {
+                                if (confirm) {
+                                    backToPhoneInput();
+                                } else {
+                                    navigation.goBack();
+                                }
+                            }
+                        }
+                    />
+                    {!confirm ?
             (<View style={style.content}>
-                <Text style={style.h1}>Masukkan Emailmu</Text>
-                <Text style={style.text}>Masukkan emailmu! Kami akan kirimkan kode verifikasi untuk melanjutkan.</Text>
+                <Text style={style.h1}>Masukkan Nomor Teleponmu</Text>
+                <Text style={style.text}>Masukkan nomor teleponmu! Kami akan kirimkan kode verifikasi untuk melanjutkan.</Text>
                 <View style={style.form}>
                     <View style={style.input}>
                         
                            
                         <TextInput
-                            placeholder="Email"
+                            placeholder="ex.: 6281234567890"
                             value={phoneNumber}
                             onChangeText={setPhoneNumber}
                             style={style.inputBox}
@@ -104,7 +102,7 @@ export default function Auth() {
                     </View>
                     <Pressable 
                         style={style.submitbtn}
-                        onPress={signInWithEmail}
+                        onPress={signInWithPhoneNumber}
                     >
                         <Text style={{
                             color: colors.background,

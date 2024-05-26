@@ -53,7 +53,9 @@ export default function Beranda() {
 
                     </View>
                     <View style={{alignItems: 'center'}}>
-                        <Pressable style={style.small_pressable}>
+                        <Pressable style={style.small_pressable}
+                        onPress={() => navigation.navigate('perawatan_makam')}
+                        >
                             <Image source={require('./../../assets/home-perawatan.png')}
                                 style={{ width: '100%', height: 58, borderRadius: 20}}
                             />
@@ -62,7 +64,9 @@ export default function Beranda() {
 
                     </View>
                     <View style={{alignItems: 'center'}}>
-                        <Pressable style={style.small_pressable}>
+                        <Pressable style={style.small_pressable}
+                        onPress={() => navigation.navigate('konseling_mental')}
+                        >
                             <Image source={require('./../../assets/home-konseling.png')}
                                 style={{ width: '100%', height: 58, borderRadius: 20}}
                             />
@@ -76,10 +80,13 @@ export default function Beranda() {
                 <View style={{...style.card, marginTop: 20, width: '100%', paddingBottom: 270}}>
                     <Text style={style.h1}>Feeds</Text>
                     <ScrollView style={{}}>
+                        <View style={{height: 20}}></View>
                         {feeds.map((item, index) => {
                             return (
-                                <Pressable key={index} style={style.feed}>
-                                    <Image source={{ uri: item.img_url }} style={{ width: '100%', height: 130, borderRadius: 15, marginBottom: 10 }} />
+                                <Pressable key={index} style={style.feed}
+                                onPress={() => navigation.navigate('feed', {item: item})}
+                                >
+                                    <Image source={{ uri: item.img_url }} style={{ width: '100%', height: 130, borderRadius: 10, marginBottom: 10 }} />
                                     <View style={{padding: 5}}>
                                     <Text style={style.h2}>{item.title}</Text>
                                     <Text style={style.desc}>{item.content}</Text>
@@ -134,7 +141,7 @@ const style = {
         width: '80%',
         alignSelf: 'center',
         backgroundColor: colors.surfacecontainer,
-        borderRadius: 25,
+        borderRadius: 15,
         padding: 10,
         marginBottom: 20,
         shadowColor: colors.onsurface,

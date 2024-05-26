@@ -12,26 +12,20 @@ import { useBooking } from '../booking-context';
 const contents=[
     {
         id: 0,
-        name: 'Taman Makam Pahlawan',
-        location: 'Jl. Medan Merdeka Barat No. 17, Jakarta Pusat',
-        region: 'Jakarta Pusat',
+        name: 'Ambulans',
+        description: 'Ambulans dapat digunakan untuk mengangkut jenazah dari rumah atau tempat kejadian meninggal ke rumah duka atau langsung ke pemakaman.',
         img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 1.000.000 - Rp 5.000.000',
+        range_price: 'Rp 75.000 - Rp 500.000',
         contents: 
             {
-                description: 'Taman Makam Pahlawan adalah tempat pemakaman yang diperuntukkan bagi pahlawan yang telah berjasa bagi negara',
+                description: 'Ambulans dapat digunakan untuk mengangkut jenazah dari rumah atau tempat kejadian meninggal ke rumah duka atau langsung ke pemakaman.',
                 img_url: 'https://placebeard.it/300x200',
                 variants: [
                     {
-                        name: 'Makam Tunggal',
-                        price: 1000000
-                    },
-                    {
-                        name: 'Makam Keluarga',
-                        price: 5000000
-                    },
-                    {
-                        name: 'Makam Umum',
+                        name: 'Ambulans Standar',
+                        price: 75000
+                    }, {
+                        name: 'Ambulans VIP',
                         price: 500000
                     }
                 ]
@@ -41,116 +35,51 @@ const contents=[
     },
     {
         id: 1,
-        name: 'Taman Jaya Sentosa',
-        location: 'Jl. Gatot Subroto No. 43, Bekasi',
-        region: 'Bekasi',
+        name: 'Mobil Pemakaman',
+        description: 'Mobil Pemakaman digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
         img_url: 'https://placebeard.it/300x202',
-        range_price: 'Rp 3.000.000 - Rp 14.000.000',
+        range_price: 'Rp 100.000 - Rp 500.000',
         contents: 
             {
-                description: 'Taman Pemakaman Jaya Sentosa adalah suatu tempat yang tenang dan terjaga dengan baik di Bekasi, dekat dengan pusat kota yang sibuk. Dikelilingi oleh alam hijau dan pemandangan yang menenangkan, pemakaman ini menawarkan lingkungan yang nyaman dan penuh ketenangan bagi yang berduka. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum.',
-                img_url: 'https://placebeard.it/300x202',
+                description: 'Mobil Pemakaman digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
+                img_url: 'https://placebeard.it/300x200',
                 variants: [
                     {
-                        name: 'Makam Tunggal',
-                        price: 5000000
-                    },
-                    {
-                        name: 'Makam Keluarga',
-                        price: 14000000
-                    },
-                    {
-                        name: 'Makam Umum',
-                        price: 3000000
+                        name: 'Mobil Pemakaman Standar',
+                        price: 100000
+                    }, {
+                        name: 'Mobil Pemakaman VIP',
+                        price: 500000
                     }
                 ]
             }
-    },
+    }, 
     {
         id: 2,
-        name: 'Taman Makam Indah',
-        location: 'Jl. Cipto Mangunkusumo No. 12, Surabaya',
-        region: 'Surabaya',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 2.000.000 - Rp 6.000.000',
-        contents: {
-            description: 'Taman Makam Indah adalah tempat pemakaman yang terletak di Surabaya, dikelilingi oleh alam yang indah dan nyaman. Tempat ini menawarkan berbagai pilihan makam untuk keluarga dan umum.',
-            img_url: 'https://placebeard.it/300x200',
-            variants: [
-                { name: 'Makam Tunggal', price: 2000000 },
-                { name: 'Makam Keluarga', price: 6000000 },
-                { name: 'Makam Umum', price: 500000 }
-            ]
-        }
-    },
-    {
-        id: 3,
-        name: 'Taman Makam Damai',
-        location: 'Jl. Pahlawan No. 23, Bandung',
-        region: 'Bandung',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 1.500.000 - Rp 4.500.000',
-        contents: {
-            description: 'Taman Makam Damai adalah tempat pemakaman yang terletak di Bandung, menyediakan lingkungan yang tenang dan damai untuk orang yang berduka.',
-            img_url: 'https://placebeard.it/300x200',
-            variants: [
-                { name: 'Makam Tunggal', price: 1500000 },
-                { name: 'Makam Keluarga', price: 4500000 },
-                { name: 'Makam Umum', price: 400000 }
-            ]
-        }
-    },
-    {
-        id: 4,
-        name: 'Taman Makam Bahagia',
-        location: 'Jl. Pahlawan No. 45, Yogyakarta',
-        region: 'Yogyakarta',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 1.200.000 - Rp 3.500.000',
-        contents: {
-            description: 'Taman Makam Bahagia adalah tempat pemakaman yang terletak di Yogyakarta, menyediakan lingkungan yang nyaman dan bahagia bagi yang berduka.',
-            img_url: 'https://placebeard.it/300x200',
-            variants: [
-                { name: 'Makam Tunggal', price: 1200000 },
-                { name: 'Makam Keluarga', price: 3500000 },
-                { name: 'Makam Umum', price: 300000 }
-            ]
-        }
-    },
-    {
-        id: 5,
-        name: 'Taman Makam Sejahtera',
-        location: 'Jl. Merdeka No. 67, Semarang',
-        region: 'Semarang',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 1.800.000 - Rp 5.000.000',
-        contents: {
-            description: 'Taman Makam Sejahtera adalah tempat pemakaman yang terletak di Semarang, menyediakan lingkungan yang sejahtera dan nyaman bagi yang berduka.',
-            img_url: 'https://placebeard.it/300x200',
-            variants: [
-                { name: 'Makam Tunggal', price: 1800000 },
-                { name: 'Makam Keluarga', price: 5000000 },
-                { name: 'Makam Umum', price: 400000 }
-            ]
-        }
-    },
-    {
-        id: 6,
-        name: 'Taman Makam Sentosa',
-        location: 'Jl. Sentosa No. 21, Malang',
-        region: 'Malang',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 1.700.000 - Rp 4.200.000',
-        contents: {
-            description: 'Taman Makam Sentosa adalah tempat pemakaman yang terletak di Malang, menyediakan lingkungan yang tenang dan sentosa bagi yang berduka.',
-            img_url: 'https://placebeard.it/300x200',
-            variants: [
-                { name: 'Makam Tunggal', price: 1700000 },
-                { name: 'Makam Keluarga', price: 4200000 },
-                { name: 'Makam Umum', price: 300000 }
-            ]
-        }
-    },
+        name: 'Keranda',
+        description: 'Keranda digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
+        img_url: 'https://placebeard.it/300x240',
+        range_price: 'Rp 50.000 - Rp 500.000',
+        contents: 
+            {
+                description: 'Keranda digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
+                img_url: 'https://placebeard.it/300x200',
+                variants: [
+                    {
+                        name: 'Keranda Bambu',
+                        price: 50000
+                    },
+                    {
+                        name: 'Keranda Kayu',
+                        price: 100000
+                    },
+                    {
+                        name: 'Keranda Besi',
+                        price: 500000
+                    }
+                ]
+            }
+    }
     
     
     
@@ -160,10 +89,11 @@ const contents=[
 
 
 
-export default function Booking_area_pemakaman() {
+export default function Sarana_prasarana_pemakaman() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents} = useBooking();
     useEffect(() => {
+        console.log('keganti');
     }, []);
     
     const getIdsByVal = (val) => {
@@ -221,15 +151,15 @@ export default function Booking_area_pemakaman() {
                     style={{ alignSelf: 'flex-start' }}
                     onPress={() => navigation.goBack()}
                 />
-                <Text style={style.h1}>Booking Area Pemakaman</Text>
+                <Text style={style.h1}>Sarana Prasarana Pemakaman</Text>
             </View>
 
             {/* added contents */}
-            { getIdsByVal('booking_area_pemakaman').length > 0 ? 
+            { getIdsByVal('sarana_prasarana_pemakaman').length > 0 ? 
             (<View>
                <Text style={{color: colors.onsurface, fontSize: 13, fontWeight: 600, marginLeft: 20, marginBottom: 10}}>Ditambahkan</Text>
                 {
-                    getIdsByVal('booking_area_pemakaman').map((item, index) => (
+                    getIdsByVal('sarana_prasarana_pemakaman').map((item, index) => (
                         <View key={index} style={ style.card}>
                             <Image source={{ uri: contents[item.id].img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
                             <View style={{ paddingLeft: 15, paddingRight: 15, width: '73%' }}>
@@ -250,7 +180,7 @@ export default function Booking_area_pemakaman() {
 
                             }}
                             onPress={() => {
-                                removeIdFromVal('booking_area_pemakaman', item.id);
+                                removeIdFromVal('sarana_prasarana_pemakaman', item.id);
                                 
                             }}
                             >
@@ -277,7 +207,7 @@ export default function Booking_area_pemakaman() {
             <Pressable style={style.searchbar}>
 
 
-                    <Text style={{ color: colors.onsurface, marginLeft: 10 }}>Cari di area sekitarmu!</Text>
+                    <Text style={{ color: colors.onsurface, marginLeft: 10 }}>Cari sewaan yang kamu mau!</Text>
                     <Icon
                         color={colors.onsurface}
                         containerStyle={{}}
@@ -295,13 +225,13 @@ export default function Booking_area_pemakaman() {
                     <Pressable key={index} style={style.card}
                     onPress={() => {
                         
-                        navigation.navigate('detail', {item: item, val: 'booking_area_pemakaman'});
+                        navigation.navigate('detail', {item: item, val: 'sarana_prasarana_pemakaman'});
                     }}
                     >
                         <Image source={{ uri: item.img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
                         <View style={{ paddingLeft: 15, paddingRight: 15, width: '73%' }}>
                             <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{item.name}</Text>
-                            <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{item.location}</Text>
+                            <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{item.description}</Text>
                             <Text style={{ color: colors.secondary, fontSize: 12, fontWeight: 500}}>{item.range_price}</Text>
 
                         </View>
@@ -330,13 +260,13 @@ export default function Booking_area_pemakaman() {
                     </Pressable>
                 ))}
 
-                {getIdsByVal('booking_area_pemakaman').length > 0 ? (
+                {getIdsByVal('sarana_prasarana_pemakaman').length > 0 ? (
                     <View style={{height: 100}}></View>
                 ) : (null
                 )}
                 
             </ScrollView>
-            {getIdsByVal('booking_area_pemakaman').length > 0 ? (
+            {getIdsByVal('sarana_prasarana_pemakaman').length > 0 ? (
                 <View style={{bottom: 0, zIndex: 100, position: 'absolute', width:'100%', alignItems: 'center', borderTopStartRadius: 40, borderTopRightRadius: 40, borderWidth: 0.5, borderColor: colors.outlinevariant, backgroundColor: colors.surfacecontainer
                 
                 }}>

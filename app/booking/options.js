@@ -81,8 +81,29 @@ export default function Options() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents } = useBooking();
     const getIdsByVal = (val) => {
-        const item = addedContents.find((item) => item.val === val);
-        return item ? item.id : [];
+        const item = addedContents['booking'].find((item) => item.val === val);
+        if (val=="booking_area_pemakaman" || val=="perlengkapan_pemakaman" || val=="sarana_prasarana_pemakaman") {
+            return item ? item.id : [];
+        } else if (val=="konseling_mental"){
+            return item.id.contact!='' ? [0,0] : [];
+        } else {
+            return item ? item.id.id : [];
+        
+        }
+    }
+    const totalAdded = () => {
+        let total = 0;
+        addedContents['booking'].forEach(item => {
+            if (item.val == 'booking_area_pemakaman' || item.val == 'perlengkapan_pemakaman' || item.val == 'sarana_prasarana_pemakaman'){
+                total += item.id.length;
+            } else if (item.val == 'konseling_mental'){
+                total += item.id.contact!='' ? 1 : 0;
+            } else {
+                total += item.id.id.length;
+            }
+            
+        });
+        return total;
     }
     return (
         <View style={style.container}>
@@ -151,7 +172,7 @@ export default function Options() {
                                 {isPressed ?
                                     (item.contents.map((content, index) => (
                                         <Pressable key={index} style={style.sub_option}
-                                            onPress={() => navigation.navigate('booking_area_pemakaman')}
+                                            onPress={() => navigation.navigate(content.value)}
                                         >
                                             <Image source={content.icon} style={style.sub_option_img} />
                                             <View style={{ flex: 1 }}>
@@ -171,7 +192,19 @@ export default function Options() {
                                                     borderTopStartRadius: 15,
 
                                                 }}>
-                                                    <Text style={{color: colors.surfacecontainer, fontWeight: 500}}>{getIdsByVal(content.value).length}</Text>
+                                                    {(content.value=='booking_area_pemakaman' || content.value=='perlengkapan_pemakaman' || content.value=='sarana_prasarana_pemakaman') ? (
+                                                    <Text style={{color: colors.surfacecontainer, fontWeight: 500}}>{getIdsByVal(content.value).length}</Text>) : (
+                                                      <Icon
+                                                      color={colors.surfacecontainer}
+                                                      containerStyle={{}}
+                                                      disabledStyle={{}}
+                                                      iconProps={{}}
+                                                      iconStyle={{}}
+                                                      name="check"
+                                                      size={20}
+                                                      type="material"
+                                                  />  
+                                                    )}
 
                                                     
                                                     </View>
@@ -233,7 +266,21 @@ export default function Options() {
                     }
                     )}
                 </View>
+                <View style={{height: 100}}></View>
+                
             </ScrollView>
+            {totalAdded() > 0 ? (
+                    <View style={{bottom: 0, zIndex: 100, position: 'absolute', width:'100%', alignItems: 'center', borderTopStartRadius: 40, borderTopRightRadius: 40, borderWidth: 0.5, borderColor: colors.outlinevariant, backgroundColor: colors.surfacecontainer
+                
+                }}>
+                <Pressable style={{ backgroundColor: colors.primary, padding: 15, borderRadius: 30, position: 'relative', width: '90%', marginBottom:25, marginTop: 15 }}
+                onPress={() => 
+                    navigation.navigate('input_biodata')
+                }>
+                    <Text style={{ color: colors.surfacecontainer, textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>Selanjutnya</Text>
+                </Pressable>
+                </View>
+                ) : null}
         </View>
     )
 }

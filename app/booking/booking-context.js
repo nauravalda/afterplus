@@ -5,7 +5,10 @@ const BookingContext = createContext();
 export const useBooking = () => useContext(BookingContext);
 
 export const BookingProvider = ({ children }) => {
-    const [addedContents, setAddedContents] = useState([
+    const [addedContents, setAddedContents] = useState(
+        { 'booking' :
+        
+        [
         {
             val: 'booking_area_pemakaman',
             id : [
@@ -31,25 +34,63 @@ export const BookingProvider = ({ children }) => {
         },
         {
             val: 'pengurus_jenazah',
-            id : [],
+            id : {
+                id: [],
+                total: 0
+            }
         },
         {
             val: 'upacara_pemakaman',
-            id : [],
+            id : {
+                id: [],
+                total: 0
+            },
         },
         {
             val: 'acara_peringatan',
-            id : [],
+            id : {
+                id: [],
+                total: 0,
+                alamat_lengkap: '',
+                kecamatan: '',
+                kota: '',
+
+            },
         },
         {
             val: 'perawatan_makam',
-            id : [],
+            id : {
+                id: [],
+                total: 0,
+                alamat_lengkap: '',
+                kecamatan: '',
+                kota: '',
+            },
         },
         {
             val: 'konseling_mental',
-            id : [],
+            id : {
+                id:[],
+                date: '',
+                rangetime: '',
+                contact: '',
+                notes: ''
+            },
         }
-    ]);
+    ],
+    'serviceuser' : {
+        contact: '',
+        name: '',
+        address: '',
+        district: '',
+        city: '',
+        notes: ''
+    }
+
+}, 
+
+);
+
 
     return (
         <BookingContext.Provider value={{ addedContents, setAddedContents }}>
