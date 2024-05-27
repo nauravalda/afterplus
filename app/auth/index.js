@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from './../../constants/colors';
+import { useRef } from 'react';
 
 
 
@@ -15,6 +16,13 @@ export default function Auth() {
     const [isCodeFilled, setIsCodeFilled] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+
+    const ref_1 = useRef();
+    const ref_2 = useRef();
+    const ref_3 = useRef();
+    const ref_4 = useRef();
+    const ref_5 = useRef();
+    const ref_6 = useRef();
     
 
     const signInWithEmail = async () => {
@@ -46,6 +54,7 @@ export default function Auth() {
                 token: code.join(''),
                 type: 'email',
             });
+            console.log(code.join(''));
             if (error) {
                 console.error(error);
                 setLoading(false);
@@ -67,7 +76,51 @@ export default function Auth() {
         let newCode = [...code];
         newCode[index] = value;
         setCode(newCode);
-        setIsCodeFilled(newCode.every((v) => v !== ''));
+        // Check if all code input is filled with instance of number from 0-9 using regex
+        setIsCodeFilled(newCode.join('').match(/^[0-9]{6}$/) !== null);
+
+
+        if (value !== '') {
+            switch (index) {
+                case 0:
+                    ref_2.current.focus();
+                    break;
+                case 1:
+                    ref_3.current.focus();
+                    break;
+                case 2:
+                    ref_4.current.focus();
+                    break;
+                case 3:
+                    ref_5.current.focus();
+                    break;
+                case 4:
+                    ref_6.current.focus();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (index) {
+                case 1:
+                    ref_1.current.focus();
+                    break;
+                case 2:
+                    ref_2.current.focus();
+                    break;
+                case 3:
+                    ref_3.current.focus();
+                    break;
+                case 4:
+                    ref_4.current.focus();
+                    break;
+                case 5:
+                    ref_5.current.focus();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     return (
@@ -137,36 +190,43 @@ export default function Auth() {
                     
                     <View style={style.codeInput}>
                         <TextInput
+                            ref={ref_1}
                             style={style.inputBox}
+                            autoFocus={true}
                             keyboardType="numeric"
                             maxLength={1}
-                            onChange={(value) => setCodeByIndex(0, value)}
+                            onChangeText={(value) => setCodeByIndex(0, value)}
                         />
                         <TextInput
+                            ref={ref_2}
                             style={style.inputBox}
                             keyboardType="numeric"
                             maxLength={1}
                             onChangeText={(value) => setCodeByIndex(1, value)}
                         />
                         <TextInput
+                            ref={ref_3}
                             style={style.inputBox}
                             keyboardType="numeric"
                             maxLength={1}
                             onChangeText={(value) => setCodeByIndex(2, value)}
                         />
                         <TextInput
+                            ref={ref_4}
                             style={style.inputBox}
                             keyboardType="numeric"
                             maxLength={1}
                             onChangeText={(value) => setCodeByIndex(3, value)}
                         />
                         <TextInput
+                            ref={ref_5}
                             style={style.inputBox}
                             keyboardType="numeric"
                             maxLength={1}
                             onChangeText={(value) => setCodeByIndex(4, value)}
                         />
                         <TextInput
+                            ref={ref_6}
                             style={style.inputBox}
                             keyboardType="numeric"
                             maxLength={1}
