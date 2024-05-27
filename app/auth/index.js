@@ -1,7 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native';
 import React, { useState, useContext } from 'react';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { supabase } from '../../lib/supabase';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from './../../constants/colors';
@@ -10,54 +9,66 @@ import { colors } from './../../constants/colors';
 
 
 export default function Auth() {
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [confirm, setConfirm] = useState(null);
-    const [code, setCode] = useState('');
+    const [email, setEmail] = useState('');
+    const [confirm, setConfirm] = useState(false);
+    const [code, setCode] = useState(['', '', '', '', '', '']);
+    const [isCodeFilled, setIsCodeFilled] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
     
 
-    const signInWithPhoneNumber = async () => {
+    const signInWithEmail = async () => {
         try {
-            const confirmation = await auth().signInWithPhoneNumber(formatPhoneNumber(phoneNumber));
-            setConfirm(confirmation);
+            setLoading(true);
+            const { data, error } = await supabase.auth.signInWithOtp({
+                email: email,
+            })
+            if (error) {
+                console.error(error);
+            } else {
+                setConfirm(true);
+            }
+            setLoading(false);
+            console.log(data);
         } catch (e) {
-            console.error("Error sending code: ", e);
+            console.error(e);
         }
     };
 
-    const formatPhoneNumber = (phoneNumber) => {
-        return `+${phoneNumber}`;
-    }
-
     const confirmCode = async () => {
         try {
-            const userCredential = await confirm.confirm(code);
-            const user = userCredential.user;
-            // check if user exists in firestore
-            const userDocument = await firestore().collection('users').doc(user.uid).get();
-            if (userDocument.exists) {
-                console.log('User exists');
-                navigation.navigate('activities');
-                // navigate to home screen
+            setLoading(true);
+            const {
+                data: {session},
+                error
+            } = await supabase.auth.verifyOtp({
+                email: email,
+                token: code.join(''),
+                type: 'email',
+            });
+            if (error) {
+                console.error(error);
+                setLoading(false);
             } else {
-                console.log('User does not exist');
-                // add new user to firestore
-                await firestore().collection('users').doc(user.uid).set({
-                    phoneNumber: user.phoneNumber,
-                });
-                navigation.navigate('onboarding');
-                // navigate to onboarding screen
-
+                console.log(session);
+                navigation.navigate('options');
             }
+
         } catch (e) {
             console.error(e);
         }
     }
 
-    const backToPhoneInput = () => {
+    const backToEmailInput = () => {
         setConfirm(null);
     }
 
+    const setCodeByIndex = (index, value) => {
+        let newCode = [...code];
+        newCode[index] = value;
+        setCode(newCode);
+        setIsCodeFilled(newCode.every((v) => v !== ''));
+    }
 
     return (
 
@@ -77,7 +88,7 @@ export default function Auth() {
                 onPress={
                             () => {
                                 if (confirm) {
-                                    backToPhoneInput();
+                                    backToEmailInput();
                                 } else {
                                     navigation.goBack();
                                 }
@@ -93,16 +104,16 @@ export default function Auth() {
                         
                            
                         <TextInput
-                            placeholder="ex.: 6281234567890"
-                            value={phoneNumber}
-                            onChangeText={setPhoneNumber}
+                            placeholder='Email'
+                            value={email}
+                            onChangeText={setEmail}
                             style={style.inputBox}
-                            keyboardType="numeric"
                         />
                     </View>
                     <Pressable 
-                        style={style.submitbtn}
-                        onPress={signInWithPhoneNumber}
+                        style={{...style.submitbtn, backgroundColor: loading ? colors.outline : colors.primary}}
+                        onPress={signInWithEmail}
+                        disabled={loading}
                     >
                         <Text style={{
                             color: colors.background,
@@ -124,17 +135,48 @@ export default function Auth() {
                     <Text style={style.h1}>Verifikasi</Text>
                     <Text style={style.text}>Kami telah mengirimkan kode verifikasi ke nomor +62-852-6323-XXXX. Masukan kode untuk melanjutkan</Text>
                     
+                    <View style={style.codeInput}>
                         <TextInput
-                            style={style.inputCode}
+                            style={style.inputBox}
                             keyboardType="numeric"
-                            placeholder='XXXXXX'
-                            maxLength={6}
-                            onChangeText={setCode}    
+                            maxLength={1}
+                            onChange={(value) => setCodeByIndex(0, value)}
                         />
-                    
+                        <TextInput
+                            style={style.inputBox}
+                            keyboardType="numeric"
+                            maxLength={1}
+                            onChangeText={(value) => setCodeByIndex(1, value)}
+                        />
+                        <TextInput
+                            style={style.inputBox}
+                            keyboardType="numeric"
+                            maxLength={1}
+                            onChangeText={(value) => setCodeByIndex(2, value)}
+                        />
+                        <TextInput
+                            style={style.inputBox}
+                            keyboardType="numeric"
+                            maxLength={1}
+                            onChangeText={(value) => setCodeByIndex(3, value)}
+                        />
+                        <TextInput
+                            style={style.inputBox}
+                            keyboardType="numeric"
+                            maxLength={1}
+                            onChangeText={(value) => setCodeByIndex(4, value)}
+                        />
+                        <TextInput
+                            style={style.inputBox}
+                            keyboardType="numeric"
+                            maxLength={1}
+                            onChangeText={(value) => setCodeByIndex(5, value)}
+                        />
+                    </View>
                     <Pressable 
-                        style={style.submitbtn}
+                        style={{...style.submitbtn, backgroundColor: isCodeFilled ? colors.primary : colors.outline}}
                         onPress={confirmCode}
+                        disabled={!isCodeFilled}
                     >
                         <Text style={{
                             color: '#FFF8F3',
@@ -168,6 +210,14 @@ const style = {
         alignItems: 'center',
         marginBottom: 16,
     },
+    codeInput: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+
+    },
     h1: {
         color: colors.onsurface,
         fontFamily: 'Roboto',
@@ -190,9 +240,8 @@ const style = {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-
     }, inputBox: {
-        width: '100%',
+        flex: 1,
         height: 60,
         borderColor: colors.outline,
         borderWidth: 1,
@@ -200,6 +249,7 @@ const style = {
         justifyContent: 'center',
         alignItems: 'center',
         paddingLeft: 16,
+        margin: 4,
         fontSize: 16,
     }, submitbtn: {
         backgroundColor: colors.primary,
