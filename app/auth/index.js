@@ -26,7 +26,8 @@ export default function Auth() {
     };
 
     const formatPhoneNumber = (phoneNumber) => {
-        return `+${phoneNumber}`;
+        console.log('+'+phoneNumber);
+        return ('+'+phoneNumber);
     }
 
     const confirmCode = async () => {
@@ -37,7 +38,7 @@ export default function Auth() {
             const userDocument = await firestore().collection('users').doc(user.uid).get();
             if (userDocument.exists) {
                 console.log('User exists');
-                navigation.navigate('activities');
+                navigation.navigate('beranda');
                 // navigate to home screen
             } else {
                 console.log('User does not exist');
@@ -45,7 +46,7 @@ export default function Auth() {
                 await firestore().collection('users').doc(user.uid).set({
                     phoneNumber: user.phoneNumber,
                 });
-                navigation.navigate('onboarding');
+                navigation.navigate('beranda');
                 // navigate to onboarding screen
 
             }
