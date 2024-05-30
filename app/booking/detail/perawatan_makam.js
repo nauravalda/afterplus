@@ -4,51 +4,51 @@ import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { supabase } from '../../../lib/supabase';
 
-const content = [
-    {
-        id: 0,
-        name: 'Perawatan Makam',
-        description: 'Kami akan membantumu merencanakan upgrade makam sesuai dengan preferensimu.',
-        range_price: 'Start from Rp 25.000',
-        img_url: 'https://placebeard.it/300x200',
-        variants: [
-            {
-                id: 0,
-                name: 'Pembersihan Makam Standar',
-                price: 25000
-            },
-            {
-                id: 1,
-                name: 'Penghijauan Rumput',
-                price: 75000
-            }, 
-            {
-                id: 2,
-                name: 'Penambahan Tanaman Hias',
-                price: 75000
-            },
-            {
-                id: 3,
-                name: 'Pemasangan Tembok Makam',
-                price: 100000
-            },{
-                id: 4,
-                name: 'Pemasangan Atap Makam',
-                price: 100000
-            },{
-                id: 5,
-                name: 'Pemasangan Pagar Makam',
-                price: 100000
-            },{
-                id: 6,
-                name: 'Pemasangan Nisan',
-                price: 100000
-            }
-        ]
-    }
-]
+// const content = [
+//     {
+//         id: 0,
+//         name: 'Perawatan Makam',
+//         description: 'Kami akan membantumu merencanakan upgrade makam sesuai dengan preferensimu.',
+//         range_price: 'Start from Rp 25.000',
+//         img_url: 'https://placebeard.it/300x200',
+//         variants: [
+//             {
+//                 id: 0,
+//                 name: 'Pembersihan Makam Standar',
+//                 price: 25000
+//             },
+//             {
+//                 id: 1,
+//                 name: 'Penghijauan Rumput',
+//                 price: 75000
+//             }, 
+//             {
+//                 id: 2,
+//                 name: 'Penambahan Tanaman Hias',
+//                 price: 75000
+//             },
+//             {
+//                 id: 3,
+//                 name: 'Pemasangan Tembok Makam',
+//                 price: 100000
+//             },{
+//                 id: 4,
+//                 name: 'Pemasangan Atap Makam',
+//                 price: 100000
+//             },{
+//                 id: 5,
+//                 name: 'Pemasangan Pagar Makam',
+//                 price: 100000
+//             },{
+//                 id: 6,
+//                 name: 'Pemasangan Nisan',
+//                 price: 100000
+//             }
+//         ]
+//     }
+// ]
 
 export default function Perawatan_makam() {
     const nav = useNavigation();
@@ -58,6 +58,49 @@ export default function Perawatan_makam() {
 
     const [district, setDistrict] = useState('');
     const [city, setCity] = useState('');
+
+    const [content, setContent] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log('Fetching data from database...');
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'perawatan_makam');
+
+            if (error) {
+                console.error(error);
+            } else {
+                const newContent = [];
+                if (data.length > 0) {
+                    const item = data[0];
+                    const variants = item.varian.split(', ');
+                    const prices = item.harga.split(', ');
+
+                    const newVariants = variants.map((variant, index) => ({
+                        id: index,
+                        name: variant,
+                        price: parseInt(prices[index], 10)
+                    }));
+
+
+                    newContent.push({
+                        id: item.id,
+                        name: item.nama,
+                        range_price: 'Rp ' + Math.min(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' - Rp ' + Math.max(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+                        description: item.deskripsi,
+                        img_url: item.img_url,
+                        variants: newVariants
+                    });
+                }
+                setContent(newContent);
+            }
+        };
+
+        fetchData();
+    }, []);
+    
     
     const handleSelectVariant = (id, name, price) => {
         setSelectedVariants(prevState => {
@@ -113,6 +156,7 @@ export default function Perawatan_makam() {
     };
 
     return (
+        content === null ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}><Text style={{color: colors.surfacecontainer, fontWeight: 800}}> Loading...</Text></View> :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
