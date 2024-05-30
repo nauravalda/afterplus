@@ -67,7 +67,6 @@ export default function Auth() {
             //     console.log(session);
             //     setUser(session.user);
             // }
-            const email = 'ghosanirozan1@gmail.com';
             setLoading(false);
             // check if user is already registered
             const { data: users, error: userError } = await supabase
