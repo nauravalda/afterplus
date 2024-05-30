@@ -6,42 +6,43 @@ import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
+import { supabase } from '../../../lib/supabase';
 
-const content = [
-    {
-        id: 0,
-        name: 'Konseling Mental',
-        description: 'Kami menyediakan layanan konseling mental untuk membantu kamu dalam mengatasi masalah kesehatan mental yang kamu alami. Layanan ini dilakukan oleh para ahli kesehatan mental yang berpengalaman dan terpercaya.',
-        range_price: '',
-        img_url: 'https://placebeard.it/300x200',
-        variants: [
-            {
-                id: 0,
-                name: 'Masalah Keuangan',
-            },
-            {
-                id: 1,
-                name: 'Masalah Keluarga',
-            },
-            {
-                id: 2,
-                name: 'Masalah Pekerjaan',
-            },
-            {
-                id: 3,
-                name: 'Masalah Pribadi',
-            },
-            {
-                id: 4,
-                name: 'Mental Health Check-up',
-            },
-            {
-                id: 5,
-                name: 'Stress Management',
-            }
-        ]
-    }
-]
+// const content = [
+//     {
+//         id: 0,
+//         name: 'Konseling Mental',
+//         description: 'Kami menyediakan layanan konseling mental untuk membantu kamu dalam mengatasi masalah kesehatan mental yang kamu alami. Layanan ini dilakukan oleh para ahli kesehatan mental yang berpengalaman dan terpercaya.',
+//         range_price: '',
+//         img_url: 'https://placebeard.it/300x200',
+//         variants: [
+//             {
+//                 id: 0,
+//                 name: 'Masalah Keuangan',
+//             },
+//             {
+//                 id: 1,
+//                 name: 'Masalah Keluarga',
+//             },
+//             {
+//                 id: 2,
+//                 name: 'Masalah Pekerjaan',
+//             },
+//             {
+//                 id: 3,
+//                 name: 'Masalah Pribadi',
+//             },
+//             {
+//                 id: 4,
+//                 name: 'Mental Health Check-up',
+//             },
+//             {
+//                 id: 5,
+//                 name: 'Stress Management',
+//             }
+//         ]
+//     }
+// ]
 
 export default function Konseling_mental() {
     const nav = useNavigation();
@@ -56,6 +57,48 @@ export default function Konseling_mental() {
     const [contact, setContact] = useState('');
 
     const [notes, setNotes] = useState('');
+
+    const [content, setContent] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log('Fetching data from database...');
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'konseling_mental');
+
+            if (error) {
+                console.error(error);
+            } else {
+                const newContent = [];
+                if (data.length > 0) {
+                    const item = data[0];
+                    const variants = item.varian.split(', ');
+                    const prices = item.harga.split(', ');
+
+                    const newVariants = variants.map((variant, index) => ({
+                        id: index,
+                        name: variant,
+                        price: parseInt(prices[index], 10)
+                    }));
+
+
+                    newContent.push({
+                        id: item.id,
+                        name: item.nama,
+                        range_price: 'Rp ' + Math.min(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' - Rp ' + Math.max(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+                        description: item.deskripsi,
+                        img_url: item.img_url,
+                        variants: newVariants
+                    });
+                }
+                setContent(newContent);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     
     const handleSelectVariant = (id, name) => {
@@ -92,6 +135,7 @@ export default function Konseling_mental() {
     };
 
     return (
+        content === null ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}><Text style={{color: colors.surfacecontainer, fontWeight: 800}}> Loading...</Text></View> :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
