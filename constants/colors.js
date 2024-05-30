@@ -4,7 +4,7 @@ export const colors = {
     background: "#FFF8F7",
     onsurface:"#221919",
     onsurfacevariant:"#524343",
-    surfacecontainer: "#FCEAE9",
+    surfacecontainer: "#FFF8F7",
 
 
     primary: "#DA384F",

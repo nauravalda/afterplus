@@ -126,7 +126,6 @@ export default function Konseling_mental() {
                                 size={24}
                                 type="material"
                                 style={{ alignSelf: 'flex-start', marginRight: 10, opacity: 0.65 }}
-                                onPress={() => nav.goBack()}
                             />
                         </Pressable>
                         {open ? (

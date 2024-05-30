@@ -1,10 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from './../../constants/colors';
 import { useRef } from 'react';
+import { useUser } from './user-context';
+
 
 
 
@@ -16,6 +18,8 @@ export default function Auth() {
     const [isCodeFilled, setIsCodeFilled] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+    const { user, setUser } = useUser();
+
 
     const ref_1 = useRef();
     const ref_2 = useRef();
@@ -37,7 +41,8 @@ export default function Auth() {
                 setConfirm(true);
             }
             setLoading(false);
-            console.log(data);
+            setConfirm(true);
+            // console.log(data);
         } catch (e) {
             console.error(e);
         }
@@ -60,7 +65,36 @@ export default function Auth() {
                 setLoading(false);
             } else {
                 console.log(session);
-                navigation.navigate('options');
+                setUser(session.user);
+            }
+            setLoading(false);
+            // check if user is already registered
+            const { data: users, error: userError } = await supabase
+                .from('users')
+                .select()
+                .eq('email', email)
+
+            // check if user nama_lengkap column not null
+            if (users[0].nama_lengkap) {
+                
+                setUser({
+                    ...user,
+
+                    email: email,
+                    id: users[0].id,
+                    name: users[0].nama_lengkap,
+                    address: users[0].alamat,
+                    city : users[0].kota,
+                    district: users[0].kecamatan,
+                    birthdate: users[0].tanggal_lahir,
+
+                
+                })
+
+                navigation.navigate('mytabs');
+            }
+            else {
+                navigation.navigate('register');
             }
 
         } catch (e) {
@@ -123,7 +157,15 @@ export default function Auth() {
         }
     }
 
+    useEffect(() => {
+        if (user) {
+            navigation.navigate('mytabs');
+        }
+    }
+    , [user]);
+
     return (
+
 
 
         <View style={style.container}>
@@ -150,8 +192,8 @@ export default function Auth() {
                     />
                     {!confirm ?
             (<View style={style.content}>
-                <Text style={style.h1}>Masukkan Nomor Teleponmu</Text>
-                <Text style={style.text}>Masukkan nomor teleponmu! Kami akan kirimkan kode verifikasi untuk melanjutkan.</Text>
+                <Text style={style.h1}>Masukkan Emailmu!</Text>
+                <Text style={style.text}>Masukkan emailmu! Kami akan kirimkan kode verifikasi untuk melanjutkan.</Text>
                 <View style={style.form}>
                     <View style={style.input}>
                         
@@ -186,7 +228,7 @@ export default function Auth() {
                 
                 <View style={style.content}>
                     <Text style={style.h1}>Verifikasi</Text>
-                    <Text style={style.text}>Kami telah mengirimkan kode verifikasi ke nomor +62-852-6323-XXXX. Masukan kode untuk melanjutkan</Text>
+                    <Text style={style.text}>Kami telah mengirimkan kode verifikasi ke {email}. Masukan kode untuk melanjutkan</Text>
                     
                     <View style={style.codeInput}>
                         <TextInput

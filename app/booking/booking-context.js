@@ -12,16 +12,7 @@ export const BookingProvider = ({ children }) => {
         {
             val: 'booking_area_pemakaman',
             id : [
-                {
-                    id: 1,
-                    desc: 'Makam Tunggal',
-                    price: 1000000
-                },
-                {
-                    id: 3,
-                    desc: 'Makam Keluarga',
-                    price: 2000000
-                }
+                
             ],
         },
         {
