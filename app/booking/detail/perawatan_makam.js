@@ -156,7 +156,11 @@ export default function Perawatan_makam() {
     };
 
     return (
-        content === null ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}><Text style={{color: colors.surfacecontainer, fontWeight: 800}}> Loading...</Text></View> :
+        content === null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
+        :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
