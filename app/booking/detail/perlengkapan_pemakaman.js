@@ -7,110 +7,54 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { useBooking } from '../booking-context';
-
-
-const contents=[
-    {
-        id: 0,
-        name: 'Kain Kafan',
-        agama: 'Islam',
-        description: 'Kain Kafan adalah kain yang digunakan untuk mengkafani jenazah',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 200.000 - Rp 500.000',
-        contents: 
-
-            {
-                description: 'Kain Kafan adalah kain yang digunakan untuk mengkafani jenazah',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'Ukuran S',
-                        price: 1000000
-                    },{
-                        name: 'Ukuran M',
-                        price: 2000000
-                    },{
-                        name: 'Ukuran L',
-                        price: 3000000
-                    }, {
-                        name: 'Ukuran XL',
-                        price: 5000000
-                    }
-                ]
-            }
-        
-
-    },
-    {
-        id: 1,
-        name: 'Peti Mati',
-        agama: 'Kristen Katolik',
-        description: 'Peti mati adalah peti yang digunakan untuk menaruh jenazah',
-        img_url: 'https://placebeard.it/300x202',
-        range_price: 'Rp 2.000.000 - Rp 10.000.000',
-        contents: 
-            {
-                description: 'Peti mati adalah peti yang digunakan untuk menaruh jenazah',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'Level 1',
-                        price: 2000000
-                    },{
-                        name: 'Level 2',
-                        price: 5000000
-                    },{
-                        name: 'Level 3',
-                        price: 8000000
-                    }, {
-                        name: 'Level 4',
-                        price: 10000000
-                    }
-                ]
-            }
-    }, 
-    {
-        id: 2,
-        name: 'Guci Abu',
-        agama: 'Buddha Hindu',
-        description: 'Guci Abu adalah guci yang berisi abu jenazah',
-        img_url: 'https://placebeard.it/300x204',
-        range_price: 'Rp 500.000 - Rp 2.000.000',
-        contents: 
-            {
-                description: 'Guci Abu adalah guci yang berisi abu jenazah',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'level 1',
-                        price: 500000
-                    },{
-                        name: 'level 2',
-                        price: 1000000
-                    },{
-                        name: 'level 3',
-                        price: 1500000
-                    }, {
-                        name: 'level 4',
-                        price: 2000000
-                    }
-                ]
-            }
-    }
-    
-    
-    
-    
-    
-]
-
+import { supabase } from '../../../lib/supabase';
 
 
 export default function Perlengkapan_pemakaman() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents} = useBooking();
+    const [contents, setContents] = useState([]);
+
     useEffect(() => {
-        console.log('keganti');
+        const fetchContents = async () => {
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'perlengkapan_pemakaman');
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(data);
+
+            // Parse data
+            const parsedData = data.map((item) => {
+                const variants = item.varian.split(',').map((variant, index) => {
+                    return {
+                        name: variant.trim(),
+                        price: parseInt(item.harga.split(',')[index].trim())
+                    };
+                });
+                // Find min and max price
+                const minPrice = Math.min(...variants.map((variant) => variant.price));
+                const maxPrice = Math.max(...variants.map((variant) => variant.price));
+                return {
+                    id: item.id,
+                    name: item.nama_produk,
+                    description: item.deskripsi_singkat,
+                    img_url: item.img_url,
+                    range_price: `Rp ${formatRupiah(minPrice)} - Rp ${formatRupiah(maxPrice)}`,
+                    contents: {
+                        description: item.deskripsi,
+                        img_url: item.img_url,
+                        variants: variants
+                    }
+                };
+            });
+            setContents(parsedData);
+        }
+        fetchContents();
     }, []);
     
     const getIdsByVal = (val) => {
@@ -138,13 +82,15 @@ export default function Perlengkapan_pemakaman() {
         });
     };
 
+    
     const formatRupiah = (angka) => {
         var number_string = angka.toString(),
             sisa = number_string.length % 3,
             rupiah = number_string.substr(0, sisa),
             ribuan = number_string.substr(sisa).match(/\d{3}/g);
+
         if (ribuan) {
-            separator = sisa ? '.' : '';
+            var separator = sisa ? '.' : '';
             rupiah += separator + ribuan.join('.');
         }
         return rupiah;
