@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Image, ScrollView, TextInput } from 'react-native';
+import { Text, View, Pressable, Image, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
@@ -6,49 +6,6 @@ import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
 import { supabase } from '../../../lib/supabase';
 
-// const content = [
-//     {
-//         id: 0,
-//         name: 'Perawatan Makam',
-//         description: 'Kami akan membantumu merencanakan upgrade makam sesuai dengan preferensimu.',
-//         range_price: 'Start from Rp 25.000',
-//         img_url: 'https://placebeard.it/300x200',
-//         variants: [
-//             {
-//                 id: 0,
-//                 name: 'Pembersihan Makam Standar',
-//                 price: 25000
-//             },
-//             {
-//                 id: 1,
-//                 name: 'Penghijauan Rumput',
-//                 price: 75000
-//             }, 
-//             {
-//                 id: 2,
-//                 name: 'Penambahan Tanaman Hias',
-//                 price: 75000
-//             },
-//             {
-//                 id: 3,
-//                 name: 'Pemasangan Tembok Makam',
-//                 price: 100000
-//             },{
-//                 id: 4,
-//                 name: 'Pemasangan Atap Makam',
-//                 price: 100000
-//             },{
-//                 id: 5,
-//                 name: 'Pemasangan Pagar Makam',
-//                 price: 100000
-//             },{
-//                 id: 6,
-//                 name: 'Pemasangan Nisan',
-//                 price: 100000
-//             }
-//         ]
-//     }
-// ]
 
 export default function Perawatan_makam() {
     const nav = useNavigation();

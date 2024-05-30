@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Image, ScrollView, TextInput } from 'react-native';
+import { Text, View, Pressable, Image, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
@@ -8,41 +8,6 @@ import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import { supabase } from '../../../lib/supabase';
 
-// const content = [
-//     {
-//         id: 0,
-//         name: 'Konseling Mental',
-//         description: 'Kami menyediakan layanan konseling mental untuk membantu kamu dalam mengatasi masalah kesehatan mental yang kamu alami. Layanan ini dilakukan oleh para ahli kesehatan mental yang berpengalaman dan terpercaya.',
-//         range_price: '',
-//         img_url: 'https://placebeard.it/300x200',
-//         variants: [
-//             {
-//                 id: 0,
-//                 name: 'Masalah Keuangan',
-//             },
-//             {
-//                 id: 1,
-//                 name: 'Masalah Keluarga',
-//             },
-//             {
-//                 id: 2,
-//                 name: 'Masalah Pekerjaan',
-//             },
-//             {
-//                 id: 3,
-//                 name: 'Masalah Pribadi',
-//             },
-//             {
-//                 id: 4,
-//                 name: 'Mental Health Check-up',
-//             },
-//             {
-//                 id: 5,
-//                 name: 'Stress Management',
-//             }
-//         ]
-//     }
-// ]
 
 export default function Konseling_mental() {
     const nav = useNavigation();
