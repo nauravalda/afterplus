@@ -27,6 +27,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="afterplus"/>
         <data android:scheme="com.ppam.afterplus"/>
+        <data android:scheme="exp+afterplus-mobile"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
