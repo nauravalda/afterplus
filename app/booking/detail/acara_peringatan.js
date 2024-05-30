@@ -4,29 +4,34 @@ import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
+import { supabase } from '../../../lib/supabase';
 
 
-const content = [
-    {
-        id: 0,
-        name: 'Acara Peringatan',
-        description: 'Kami akan membantumu  merencanakan acara tahlilan yang sesuai dengan keyakinan dan preferensi agamamu.',
-        range_price: 'Rp 400.000 - Rp 1.050.000',
-        img_url: 'https://placebeard.it/300x200',
-        variants: [
-            {
-                id: 0,
-                name: 'Acara Tahlilan',
-                price: 900000
-            },
-            {
-                id: 1,
-                name: 'Layanan Bingkisan Berkat',
-                price: 520000
-            }
-        ]
-    }
-]
+// const content = [
+//     {
+//         id: 0,
+//         name: 'Acara Peringatan',
+//         description: 'Kami akan membantumu  merencanakan acara tahlilan yang sesuai dengan keyakinan dan preferensi agamamu.',
+//         range_price: 'Rp 400.000 - Rp 1.050.000',
+//         img_url: 'https://placebeard.it/300x200',
+//         variants: [
+//             {
+//                 id: 0,
+//                 name: 'Acara Tahlilan',
+//                 price: 900000
+//             },
+//             {
+//                 id: 1,
+//                 name: 'Layanan Bingkisan Berkat',
+//                 price: 520000
+//             }
+//         ]
+//     }
+// ]
+
+
+
+
 
 export default function Acara_peringatan() {
     const nav = useNavigation();
@@ -36,6 +41,48 @@ export default function Acara_peringatan() {
 
     const [district, setDistrict] = useState('');
     const [city, setCity] = useState('');
+
+    const [content, setContent] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log('Fetching data from database...');
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'acara_peringatan');
+
+            if (error) {
+                console.error(error);
+            } else {
+                const newContent = [];
+                if (data.length > 0) {
+                    const item = data[0];
+                    const variants = item.varian.split(', ');
+                    const prices = item.harga.split(', ');
+
+                    const newVariants = variants.map((variant, index) => ({
+                        id: index,
+                        name: variant,
+                        price: parseInt(prices[index], 10)
+                    }));
+
+
+                    newContent.push({
+                        id: item.id,
+                        name: item.nama,
+                        range_price: 'Rp ' + Math.min(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' - Rp ' + Math.max(...prices).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+                        description: item.deskripsi,
+                        img_url: item.img_url,
+                        variants: newVariants
+                    });
+                }
+                setContent(newContent);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     
     const handleSelectVariant = (id, name, price) => {
         setSelectedVariants(prevState => {
@@ -97,6 +144,7 @@ export default function Acara_peringatan() {
     };
 
     return (
+        content === null ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}><Text style={{color: colors.surfacecontainer, fontWeight: 800}}> Loading...</Text></View> :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon

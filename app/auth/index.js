@@ -32,14 +32,14 @@ export default function Auth() {
     const signInWithEmail = async () => {
         try {
             setLoading(true);
-            const { data, error } = await supabase.auth.signInWithOtp({
-                email: email,
-            })
-            if (error) {
-                console.error(error);
-            } else {
-                setConfirm(true);
-            }
+            // const { data, error } = await supabase.auth.signInWithOtp({
+            //     email: email,
+            // })
+            // if (error) {
+            //     console.error(error);
+            // } else {
+            //     setConfirm(true);
+            // }
             setLoading(false);
             setConfirm(true);
             // console.log(data);
@@ -51,22 +51,22 @@ export default function Auth() {
     const confirmCode = async () => {
         try {
             setLoading(true);
-            const {
-                data: {session},
-                error
-            } = await supabase.auth.verifyOtp({
-                email: email,
-                token: code.join(''),
-                type: 'email',
-            });
-            console.log(code.join(''));
-            if (error) {
-                console.error(error);
-                setLoading(false);
-            } else {
-                console.log(session);
-                setUser(session.user);
-            }
+            // const {
+            //     data: {session},
+            //     error
+            // } = await supabase.auth.verifyOtp({
+            //     email: email,
+            //     token: code.join(''),
+            //     type: 'email',
+            // });
+            // console.log(code.join(''));
+            // if (error) {
+            //     console.error(error);
+            //     setLoading(false);
+            // } else {
+            //     console.log(session);
+            //     setUser(session.user);
+            // }
             setLoading(false);
             // check if user is already registered
             const { data: users, error: userError } = await supabase
