@@ -7,6 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { useBooking } from '../booking-context';
+import { supabase } from '../../../lib/supabase';
 
 
 const contents=[
@@ -92,8 +93,48 @@ const contents=[
 export default function Sarana_prasarana_pemakaman() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents} = useBooking();
+    const [contents, setContents] = useState([]);
+
     useEffect(() => {
-        console.log('keganti');
+        const fetchContents = async () => {
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'sarana_prasarana_pemakaman');
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(data);
+
+            // Parse data
+            const parsedData = data.map((item) => {
+                const variants = item.varian.split(',').map((variant, index) => {
+                    return {
+                        name: variant.trim(),
+                        price: parseInt(item.harga.split(',')[index].trim())
+                    };
+                });
+                // Find min and max price
+                const minPrice = Math.min(...variants.map((variant) => variant.price));
+                const maxPrice = Math.max(...variants.map((variant) => variant.price));
+                return {
+                    id: item.id,
+                    name: item.nama_produk,
+                    description: item.deskripsi_singkat,
+                    img_url: item.img_url,
+                    range_price: `Rp ${formatRupiah(minPrice)} - Rp ${formatRupiah(maxPrice)}`,
+                    contents: {
+                        description: item.deskripsi,
+                        img_url: item.img_url,
+                        variants: variants
+                    }
+                };
+            });
+            setContents(parsedData);
+        }
+        fetchContents();
     }, []);
     
     const getIdsByVal = (val) => {

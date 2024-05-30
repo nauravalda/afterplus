@@ -4,33 +4,72 @@ import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
+import { supabase } from '../../../lib/supabase';   
 
-const content = [
-    {
-        id: 0,
-        name: 'Pengurus Jenazah Profesional',
-        description: 'Layanan pengurus jenazah profesional menyediakan bantuan komprehensif dan pengurusan lengkap dalam proses pemakaman atau pengurusan jenazah, mulai dari persiapan hingga pelaksanaan upacara pemakaman.\n- Ahli prosedur dan persyaratan Koordinasi dengan pihak terkait\n- Layanan yang dapat dipersonalisasikan\n- Profesionalisme dan etika\n- Kemudahan pengurusan dokumen dan administrasi',
-        range_price: 'Start from Rp 75.000',
-        img_url: 'https://placebeard.it/300x200',
-        variants: [
-            {
-                id: 0,
-                name: 'Petugas Pembersihan',
-                price: 75000
-            },
-            {
-                id: 1,
-                name: 'Petugas Pemakaman',
-                price: 120000
-            }
-        ]
-    }
-]
+// const content = [
+//     {
+//         id: 0,
+//         name: 'Pengurus Jenazah Profesional',
+//         description: 'Layanan pengurus jenazah profesional menyediakan bantuan komprehensif dan pengurusan lengkap dalam proses pemakaman atau pengurusan jenazah, mulai dari persiapan hingga pelaksanaan upacara pemakaman.\n- Ahli prosedur dan persyaratan Koordinasi dengan pihak terkait\n- Layanan yang dapat dipersonalisasikan\n- Profesionalisme dan etika\n- Kemudahan pengurusan dokumen dan administrasi',
+//         range_price: 'Start from Rp 75.000',
+//         img_url: 'https://placebeard.it/300x200',
+//         variants: [
+//             {
+//                 id: 0,
+//                 name: 'Petugas Pembersihan',
+//                 price: 75000
+//             },
+//             {
+//                 id: 1,
+//                 name: 'Petugas Pemakaman',
+//                 price: 120000
+//             }
+//         ]
+//     }
+// ]
 
 export default function Pengurus_jenazah() {
     const nav = useNavigation();
-
     const [selectedVariants, setSelectedVariants] = useState([]);
+    const [content, setContent] = useState([]);
+
+    useEffect(() => {
+        const fetchContents = async () => {
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'perlengkapan_pemakaman');
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(data);
+
+            // Parse data
+            const parsedData = data.map((item) => {
+                const variants = item.varian.split(',').map((variant, index) => {
+                    return {
+                        name: variant.trim(),
+                        price: parseInt(item.harga.split(',')[index].trim())
+                    };
+                });
+                // Find min and max price
+                const minPrice = Math.min(...variants.map((variant) => variant.price));
+                const maxPrice = Math.max(...variants.map((variant) => variant.price));
+                return {
+                    id: item.id,
+                    name: item.nama_produk,
+                    description: item.deskripsi_singkat,
+                    img_url: item.img_url,
+                    range_price: `Rp ${formatRupiah(minPrice)} - Rp ${formatRupiah(maxPrice)}`,
+                    variants: variants
+                };
+            });
+            setContent(parsedData);
+        }
+        fetchContents();
+    }, []);
     
     const handleSelectVariant = (id, name, price) => {
         setSelectedVariants(prevState => {
