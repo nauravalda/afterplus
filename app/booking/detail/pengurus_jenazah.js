@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Image, ScrollView } from 'react-native';
+import { Text, View, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
@@ -6,39 +6,17 @@ import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
 import { supabase } from '../../../lib/supabase';   
 
-// const content = [
-//     {
-//         id: 0,
-//         name: 'Pengurus Jenazah Profesional',
-//         description: 'Layanan pengurus jenazah profesional menyediakan bantuan komprehensif dan pengurusan lengkap dalam proses pemakaman atau pengurusan jenazah, mulai dari persiapan hingga pelaksanaan upacara pemakaman.\n- Ahli prosedur dan persyaratan Koordinasi dengan pihak terkait\n- Layanan yang dapat dipersonalisasikan\n- Profesionalisme dan etika\n- Kemudahan pengurusan dokumen dan administrasi',
-//         range_price: 'Start from Rp 75.000',
-//         img_url: 'https://placebeard.it/300x200',
-//         variants: [
-//             {
-//                 id: 0,
-//                 name: 'Petugas Pembersihan',
-//                 price: 75000
-//             },
-//             {
-//                 id: 1,
-//                 name: 'Petugas Pemakaman',
-//                 price: 120000
-//             }
-//         ]
-//     }
-// ]
-
 export default function Pengurus_jenazah() {
     const nav = useNavigation();
     const [selectedVariants, setSelectedVariants] = useState([]);
-    const [content, setContent] = useState([]);
+    const [content, setContent] = useState(null);
 
     useEffect(() => {
         const fetchContents = async () => {
             const { data, error } = await supabase
                 .from('services')
                 .select('*')
-                .eq('kategori', 'perlengkapan_pemakaman');
+                .eq('kategori', 'pengurus_jenazah');
 
             if (error) {
                 console.error(error);
@@ -121,6 +99,11 @@ export default function Pengurus_jenazah() {
     };
 
     return (
+        content === null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
+        :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon

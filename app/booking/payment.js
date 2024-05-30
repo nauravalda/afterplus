@@ -112,8 +112,8 @@ export default function Payment() {
         {step ? (
             <View>
                 {load ? (
-                    <View style={{alignItems: 'center', backgroundColor: colors.surfacecontainer, height: '100%'}}>
-                        <Text style={{...style.h2, color: colors.onsurface, justifyContent: 'center', alignSelf: 'center'}}>Loading...</Text>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.surfacecontainer}}>
+                        <ActivityIndicator size="large" color={colors.primary} />
                     </View>
                 ):
                 

@@ -1,36 +1,10 @@
-import { Text, View, Pressable, Image, ScrollView, TextInput } from 'react-native';
+import { Text, View, Pressable, Image, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
 import { supabase } from '../../../lib/supabase';
-
-
-// const content = [
-//     {
-//         id: 0,
-//         name: 'Acara Peringatan',
-//         description: 'Kami akan membantumu  merencanakan acara tahlilan yang sesuai dengan keyakinan dan preferensi agamamu.',
-//         range_price: 'Rp 400.000 - Rp 1.050.000',
-//         img_url: 'https://placebeard.it/300x200',
-//         variants: [
-//             {
-//                 id: 0,
-//                 name: 'Acara Tahlilan',
-//                 price: 900000
-//             },
-//             {
-//                 id: 1,
-//                 name: 'Layanan Bingkisan Berkat',
-//                 price: 520000
-//             }
-//         ]
-//     }
-// ]
-
-
-
 
 
 export default function Acara_peringatan() {
@@ -144,7 +118,11 @@ export default function Acara_peringatan() {
     };
 
     return (
-        content === null ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}><Text style={{color: colors.surfacecontainer, fontWeight: 800}}> Loading...</Text></View> :
+        content === null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
+        :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon

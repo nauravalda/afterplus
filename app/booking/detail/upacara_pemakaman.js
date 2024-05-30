@@ -1,9 +1,10 @@
-import { Text, View, Pressable, Image, ScrollView } from 'react-native';
+import { Text, View, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
+import { supabase } from '../../../lib/supabase';   
 
 const content = [
     {
@@ -34,8 +35,46 @@ const content = [
 
 export default function Upacara_pemakaman() {
     const nav = useNavigation();
-
     const [selectedVariants, setSelectedVariants] = useState([]);
+    const [content, setContent] = useState(null);
+
+    useEffect(() => {
+        const fetchContents = async () => {
+            const { data, error } = await supabase
+                .from('services')
+                .select('*')
+                .eq('kategori', 'upacara_pemakaman');
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(data);
+
+            // Parse data
+            const parsedData = data.map((item) => {
+                const variants = item.varian.split(',').map((variant, index) => {
+                    return {
+                        name: variant.trim(),
+                        price: parseInt(item.harga.split(',')[index].trim())
+                    };
+                });
+                // Find min and max price
+                const minPrice = Math.min(...variants.map((variant) => variant.price));
+                const maxPrice = Math.max(...variants.map((variant) => variant.price));
+                return {
+                    id: item.id,
+                    name: item.nama_produk,
+                    description: item.deskripsi_singkat,
+                    img_url: item.img_url,
+                    range_price: `Rp ${formatRupiah(minPrice)} - Rp ${formatRupiah(maxPrice)}`,
+                    variants: variants
+                };
+            });
+            setContent(parsedData);
+        }
+        fetchContents();
+    }, []);
     
     const handleSelectVariant = (id, name, price) => {
         setSelectedVariants(prevState => {
@@ -88,6 +127,11 @@ export default function Upacara_pemakaman() {
     };
 
     return (
+        content === null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
+        :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
