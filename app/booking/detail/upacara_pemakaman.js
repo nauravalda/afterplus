@@ -6,32 +6,7 @@ import { Icon } from '@rneui/themed';
 import { useBooking } from '../booking-context';
 import { supabase } from '../../../lib/supabase';   
 
-const content = [
-    {
-        id: 0,
-        name: 'Prosesi Pemakaman',
-        description: 'Kamu membantu kamu memilih opsi layanan yang sesuai untuk upacara pemakaman yang diinginkan, termasuk tempat, jenis upacara, ritual, hingga pengaturan tambahan',
-        range_price: 'Rp 400.000 - Rp 1.050.000',
-        img_url: 'https://placebeard.it/300x200',
-        variants: [
-            {
-                id: 0,
-                name: 'Dokumentasi Pemakaman',
-                price: 75000
-            },
-            {
-                id: 1,
-                name: 'Transportasi Tambahan',
-                price: 520000
-            },
-            {
-                id: 2,
-                name: 'Ustadz',
-                price: 100000
-            }
-        ]
-    }
-]
+
 
 export default function Upacara_pemakaman() {
     const nav = useNavigation();
@@ -49,12 +24,12 @@ export default function Upacara_pemakaman() {
                 console.error(error);
                 return;
             }
-            console.log(data);
 
             // Parse data
             const parsedData = data.map((item) => {
                 const variants = item.varian.split(',').map((variant, index) => {
                     return {
+                        id: index,
                         name: variant.trim(),
                         price: parseInt(item.harga.split(',')[index].trim())
                     };

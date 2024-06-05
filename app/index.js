@@ -22,6 +22,7 @@ import Input_biodata from './booking/input_biodata';
 import Feed from './beranda/feed';
 import Payment from './booking/payment';
 import Detail from './booking/detail/detail';
+import HistoryDetail from './finplan/detail';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from './../constants/colors';
@@ -56,6 +57,7 @@ export default function App() {
             <Stack.Screen name="payment" component={Payment} />
             <Stack.Screen name="feed" component={Feed} />
             <Stack.Screen name="detail" component={Detail} />
+            <Stack.Screen name="historydetail" component={HistoryDetail} />
           </Stack.Navigator>
         </NavigationContainer>
       </BookingProvider>

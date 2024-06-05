@@ -1,46 +1,76 @@
 import {View, Text, Pressable, TextInput, StatusBar, Image} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { colors } from '../../constants/colors';
 import { ScrollView } from 'react-native-gesture-handler';
+import { supabase } from '../../lib/supabase';
+import { useUser } from '../auth/user-context';
+import { useNavigation } from '@react-navigation/native';
 
 
-// dummy data
-const pesanan_selesai = [
-    {
-        kode: 'Pemakaman',
-        content: 'Mobil jenazah, keranda, kain kafan, pengurus jenazah, ...',
-        orderdate: '12/12/2023',
-    },
-    {
-        kode: 'Perawatan Makam',
-        content: 'Pemasangan tembok, penghijauan rumput, penambahan tanaman',
-        orderdate: '20/12/2023',
-    },
-    {
-        kode: 'Konseling Mental',
-        content: 'Konseling pada tanggal 15 Desember 2023 secara virtual.',
-        orderdate: '12/12/2023',
-    }
-]
 
-const pesanan_berjalan = [
-    { 
-        kode: 'Pemakaman',
-        content: 'Area pemakaman, kain kafan',
-        orderdate: '02/01/2024',
-    },
-
-]
 
 
 
 
 export default function Finplan() {
     const [activeButton, setActiveButton] = useState('berjalan');
+    const navigation = useNavigation();
 
+    
+    const { user } = useUser();
+    const [pesanan_berjalan, setPesananBerjalan] = useState([]);
+    const [pesanan_selesai, setPesananSelesai] = useState([]);
     const handlePress = (button) => {
         setActiveButton(button);
     }
+    useEffect(() => {
+        const fetchBooking = async () => {
+            const { data, error } = await supabase
+                .from('booking')
+                .select('*')
+                .eq('user', user.id)
+            if (error) {
+                console.log(error);
+            }
+            console.log(data);
+            data.map(item => {
+                item.rincian = JSON.parse(item.rincian);
+                console.log(item.rincian);
+            });
+
+            const berjalan = data.filter(item => item.selesai === false);
+            const selesai = data.filter(item => item.selesai === true);
+            setPesananBerjalan(berjalan);
+            setPesananSelesai(selesai);
+        }
+        fetchBooking();
+    }
+    , [])
+
+    function formatDate(isoDate) {
+        const date = new Date(isoDate);
+        const day = date.getUTCDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getUTCFullYear();
+    
+        return `${day} ${month} ${year}`;
+    }
+
+    function generateContent(rincian) {
+        let title = '';
+        rincian.map((item, index) => {
+            title += item.name;
+            if (index < rincian.length - 1) {
+                title += ', ';
+            }
+        });
+        // split for 100 characters
+        if (title.length > 90) {
+            title = title.substring(0, 90) + '...';
+        }
+        return title;
+    }
+
     return (
         <View style={style.container}>
             <StatusBar backgroundColor={colors.surfacecontainer} barStyle="dark-content" />
@@ -58,18 +88,21 @@ export default function Finplan() {
             </View>
             <ScrollView>
                 {activeButton === 'berjalan' ? pesanan_berjalan.map((item, index) => (
-                    <Pressable key={index} style={style.feed}>
+                    <Pressable key={index} style={style.feed}
+                    onPress={() => navigation.navigate('historydetail', {item: item})}
+                    >
                         <View style={{padding: 15, width: '100%'}}>
-                            <Text style={style.feed_title}>{item.kode}</Text>
-                            <Text style={style.feed_content}>{item.content}</Text>
+                            <Text style={style.feed_title}>{(item.name)}</Text>
+                            <Text style={style.feed_content}>{generateContent(item.rincian)}</Text>
                             <View style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 5}}>
                             <Text style={{color: colors.outline, fontSize: 12}}>Order date:   </Text>
-                            <Text style={style.feed_date}>{item.orderdate}</Text>
+                            <Text style={style.feed_date}>{formatDate(item.created_at)}</Text>
                             </View>
                         </View>
                     </Pressable>
                 )) : pesanan_selesai.map((item, index) => (
-                    <Pressable key={index} style={style.feed}>
+                    <Pressable key={index} style={style.feed}
+                    onPress={() => navigation.navigate('historydetail', {item: item})}>
                         <View style={{padding: 15, width: '100%'}}>
                             <Text style={style.feed_title}>{item.kode}</Text>
                             <Text style={style.feed_content}>{item.content}</Text>

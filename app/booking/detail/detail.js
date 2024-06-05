@@ -36,10 +36,11 @@ export default function Detail({ navigation, route }) {
         const index = newContents['booking'].findIndex(x => x.val === route.params.val);
         // Push new variant to array
         newContents['booking'][index].id.push({ id: selectedVariant.id, desc: selectedVariant.name, price: selectedVariant.price });
-
+        console.log(selectedVariant.id, selectedVariant.name, selectedVariant.price);
         // Set new state
         setAddedContents(newContents);
         setSelectedVariant({ id: '', name: '', price: '' });
+        
 
         nav.navigate(route.params.val);
     };
@@ -70,7 +71,8 @@ export default function Detail({ navigation, route }) {
 
 
                     <Text style={{ ...style.h1, color: colors.onsurface }}>{route.params.item.name}</Text>
-                    <Text style={{ ...style.text, marginTop: 10, }}>{route.params.item.location}</Text>
+                    {!route.params.item.location ? (null) : (<Text style={{ ...style.text, marginTop: 10, }}>{route.params.item.location}</Text>)
+                    }
                     <Text style={{ ...style.text, marginTop: 10, color: colors.secondary, fontWeight: 600, backgroundColor: colors.secondarycontainer, padding: 5, alignSelf: 'flex-start', fontSize: 11, borderRadius: 10 }}>{route.params.item.range_price}</Text>
                     <Text style={{ ...style.text, marginTop: 10, paddingBottom: 10, borderBottomWidth: 1, borderColor: colors.outlinevariant, marginBottom: 20 }}>{route.params.item.contents.description}</Text>
                     {route.params.item.contents.variants.map((item, index) => (

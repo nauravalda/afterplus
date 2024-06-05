@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text, Pressable, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect } from 'react';
 import { colors } from '../../../constants/colors';
 import { Icon } from '@rneui/themed';
@@ -10,90 +10,11 @@ import { useBooking } from '../booking-context';
 import { supabase } from '../../../lib/supabase';
 
 
-const contents=[
-    {
-        id: 0,
-        name: 'Ambulans',
-        description: 'Ambulans dapat digunakan untuk mengangkut jenazah dari rumah atau tempat kejadian meninggal ke rumah duka atau langsung ke pemakaman.',
-        img_url: 'https://placebeard.it/300x200',
-        range_price: 'Rp 75.000 - Rp 500.000',
-        contents: 
-            {
-                description: 'Ambulans dapat digunakan untuk mengangkut jenazah dari rumah atau tempat kejadian meninggal ke rumah duka atau langsung ke pemakaman.',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'Ambulans Standar',
-                        price: 75000
-                    }, {
-                        name: 'Ambulans VIP',
-                        price: 500000
-                    }
-                ]
-            }
-        
-
-    },
-    {
-        id: 1,
-        name: 'Mobil Pemakaman',
-        description: 'Mobil Pemakaman digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
-        img_url: 'https://placebeard.it/300x202',
-        range_price: 'Rp 100.000 - Rp 500.000',
-        contents: 
-            {
-                description: 'Mobil Pemakaman digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'Mobil Pemakaman Standar',
-                        price: 100000
-                    }, {
-                        name: 'Mobil Pemakaman VIP',
-                        price: 500000
-                    }
-                ]
-            }
-    }, 
-    {
-        id: 2,
-        name: 'Keranda',
-        description: 'Keranda digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
-        img_url: 'https://placebeard.it/300x240',
-        range_price: 'Rp 50.000 - Rp 500.000',
-        contents: 
-            {
-                description: 'Keranda digunakan untuk mengangkut jenazah dari rumah duka ke pemakaman.',
-                img_url: 'https://placebeard.it/300x200',
-                variants: [
-                    {
-                        name: 'Keranda Bambu',
-                        price: 50000
-                    },
-                    {
-                        name: 'Keranda Kayu',
-                        price: 100000
-                    },
-                    {
-                        name: 'Keranda Besi',
-                        price: 500000
-                    }
-                ]
-            }
-    }
-    
-    
-    
-    
-    
-]
-
-
 
 export default function Sarana_prasarana_pemakaman() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents} = useBooking();
-    const [contents, setContents] = useState([]);
+    const [contents, setContents] = useState(null);
 
     useEffect(() => {
         const fetchContents = async () => {
@@ -106,7 +27,6 @@ export default function Sarana_prasarana_pemakaman() {
                 console.error(error);
                 return;
             }
-            console.log(data);
 
             // Parse data
             const parsedData = data.map((item) => {
@@ -174,10 +94,18 @@ export default function Sarana_prasarana_pemakaman() {
         return rupiah;
     }
     
+    const getContentById = (id) => {
+        return contents.find(content => content.id === id);
+    }
     
     
 
     return (
+
+        contents === null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
@@ -202,10 +130,10 @@ export default function Sarana_prasarana_pemakaman() {
                 {
                     getIdsByVal('sarana_prasarana_pemakaman').map((item, index) => (
                         <View key={index} style={ style.card}>
-                            <Image source={{ uri: contents[item.id].img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
+                            <Image source={{ uri: getContentById(item.id).img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
                             <View style={{ paddingLeft: 15, paddingRight: 15, width: '73%' }}>
-                                <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{contents[item.id].name}</Text>
-                                <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{contents[item.id].location}</Text>
+                                <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{getContentById(item.id).name}</Text>
+                                <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{getContentById(item.id).location}</Text>
                                 <Text style={{ color: colors.secondary, fontSize: 12, fontWeight: 500 }}>{item.desc} - Rp {formatRupiah(item.price)}</Text>
 
                             </View>

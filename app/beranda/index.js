@@ -12,18 +12,18 @@ const feeds = [
     {
         title: 'Baru Menggunakan After+? Yuk Ikuti Tur',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x200'
+        img_url: 'https://images.pexels.com/photos/3760118/pexels-photo-3760118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
     },
 
     {
         title: 'Tips Merelakan Kehilangan yang Meninggal',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x202'
+        img_url: 'https://cdn.antaranews.com/cache/1200x800/2023/01/05/guy-2617866_1920.jpg.webp'
     },
     {
         title: 'Mengatasi Kehilangan dengan Kreativitas',
         content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut purus eget sapien fermentum',
-        img_url: 'https://placebeard.it/300x240'
+        img_url: 'https://cdn0-production-images-kly.akamaized.net/DmMfMWZ0jCXLSY2JFM-RjlBI164=/800x450/smart/filters:quality(75):strip_icc():format(webp)/kly-media-production/medias/4103592/original/073868100_1658977618-artem-kovalev-fk3XUcfTAvk-unsplash_1_.jpg'
     }
 
 ]

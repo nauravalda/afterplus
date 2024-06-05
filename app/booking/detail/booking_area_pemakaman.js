@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image } from 'react-native';
+import { View, Text, Pressable, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect } from 'react';
 import { colors } from '../../../constants/colors';
 import { Icon } from '@rneui/themed';
@@ -13,7 +13,7 @@ import { supabase } from '../../../lib/supabase';
 export default function Booking_area_pemakaman() {
     const navigation = useNavigation();
     const { addedContents, setAddedContents} = useBooking();
-    const [contents, setContents] = useState([]);
+    const [contents, setContents] = useState(null);
 
 
     useEffect(() => {
@@ -25,7 +25,6 @@ export default function Booking_area_pemakaman() {
             if (error) {
                 console.error(error);
             } else {
-                console.log(data);
                 const parsedData = data.map(item => {
                     const variants = item.varian.split(',').map((variant, index) => {
                         return {
@@ -93,10 +92,18 @@ export default function Booking_area_pemakaman() {
         return rupiah;
     }
     
+    const getContentById = (id) => {
+        return contents.find(content => content.id === id);
+    }
     
     
 
     return (
+        contents ===null ? 
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
+        :
         <View style={style.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
                 <Icon
@@ -121,10 +128,10 @@ export default function Booking_area_pemakaman() {
                 {
                     getIdsByVal('booking_area_pemakaman').map((item, index) => (
                         <View key={index} style={ style.card}>
-                            <Image source={{ uri: contents[item.id].img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
+                            <Image source={{ uri: getContentById(item.id).img_url }} style={{ width: 64, height: 70, borderRadius: 15 }} />
                             <View style={{ paddingLeft: 15, paddingRight: 15, width: '73%' }}>
-                                <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{contents[item.id].name}</Text>
-                                <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{contents[item.id].location}</Text>
+                                <Text style={{ color: colors.onsurface, fontSize: 14, fontWeight: 500 }} numberOfLines={1}>{getContentById(item.id).name}</Text>
+                                <Text style={{ color: colors.onsurface, fontSize: 12, fontWeight: 400 }} numberOfLines={1}>{getContentById(item.id).location}</Text>
                                 <Text style={{ color: colors.secondary, fontSize: 12, fontWeight: 500 }}>{item.desc} - Rp {formatRupiah(item.price)}</Text>
 
                             </View>

@@ -22,16 +22,20 @@ export default function Pengurus_jenazah() {
                 console.error(error);
                 return;
             }
-            console.log(data);
 
             // Parse data
             const parsedData = data.map((item) => {
+                
                 const variants = item.varian.split(',').map((variant, index) => {
                     return {
+                        id: index,
                         name: variant.trim(),
                         price: parseInt(item.harga.split(',')[index].trim())
                     };
+
                 });
+                // add id to variants 0,1,..
+                
                 // Find min and max price
                 const minPrice = Math.min(...variants.map((variant) => variant.price));
                 const maxPrice = Math.max(...variants.map((variant) => variant.price));
@@ -54,8 +58,12 @@ export default function Pengurus_jenazah() {
             const index = prevState.findIndex(variant => variant.id === id);
             if (index > -1) {
                 // Remove the variant if it's already selected
+                
+            console.log(selectedVariants);
                 return prevState.filter(variant => variant.id !== id);
             } else {
+                
+            console.log(selectedVariants);
                 // Add the variant if it's not selected
                 return [...prevState, { id, name, price }];
             }
@@ -148,8 +156,11 @@ export default function Pengurus_jenazah() {
                                     />
                                 )}
 
-                                <View>
-                                    <Text style={style.text}>{item.name}</Text>
+                                <View style={{width: '90%'}}>
+                                    <Text style={{...style.text,
+                                                width: '90%',
+                                                flexWrap : 'wrap', textAlign: 'left'
+                                    }}>{item.name}</Text>
                                     <Text style={{ ...style.text, color: colors.secondary, fontWeight: 500 }}>
                                         Rp {formatRupiah(item.price)}
                                     </Text>
@@ -204,7 +215,9 @@ const style = {
         fontSize: 14,
         fontWeight: 400,
         lineHeight: 20,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        textAlign: 'justify',
+
     },
     option: {
         height: 70,
