@@ -1,23 +1,44 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Image } from 'react-native';
-import React, { useState, useContext } from 'react';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { Icon } from '@rneui/themed';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../constants/colors';
-
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Add this line
+import { useUser } from '../auth/user-context';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function Landing() {
+    const { user, setUser } = useUser();
+    const [isloading, setIsLoading] = useState(true);
 
     const navigation = useNavigation();
     
+    async function getData() {
+        try {
+            const value = await AsyncStorage.getItem('isLogin');
+            if(value !== null) {
+                const user = await AsyncStorage.getItem('user');
+                setUser(JSON.parse(user));
+                navigation.navigate('mytabs');
+            } else {
+                setIsLoading(false);
+            }
+        } catch (e) {
+            setIsLoading(false);
+        }
+    } 
 
-
+    useEffect(() => {
+        getData();
+    }, []);
 
     return (
+        isloading?
+        
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.primary }}>
+            <ActivityIndicator size="large" color={colors.background} />
+        </View> 
 
+        :
 
         <View style={style.container}>
 

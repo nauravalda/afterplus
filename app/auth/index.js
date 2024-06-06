@@ -6,9 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { colors } from './../../constants/colors';
 import { useRef } from 'react';
 import { useUser } from './user-context';
-
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Auth() {
@@ -87,9 +85,19 @@ export default function Auth() {
                     city : users[0].kota,
                     district: users[0].kecamatan,
                     birthdate: users[0].tanggal_lahir,
-
-                
                 })
+
+                await AsyncStorage.setItem('user', JSON.stringify({
+                    ...user,
+                    email: email,
+                    id: users[0].id,
+                    name: users[0].nama_lengkap,
+                    address: users[0].alamat,
+                    city : users[0].kota,
+                    district: users[0].kecamatan,
+                    birthdate: users[0].tanggal_lahir,
+                }));
+                await AsyncStorage.setItem('isLogin', JSON.stringify(true));
 
                 navigation.navigate('mytabs');
             }

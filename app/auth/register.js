@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { useUser } from './user-context';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Register() {
     const nav = useNavigation();
@@ -69,6 +70,15 @@ export default function Register() {
             email: user.email
         })
 
+        await AsyncStorage.setItem('user', JSON.stringify({
+            ...user,
+            name: name,
+            address: address,
+            city: city,
+            district: district,
+            birthdate: date,
+            email: user.email
+        }))
 
         nav.navigate('mytabs')
     }

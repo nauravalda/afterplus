@@ -1,6 +1,5 @@
 import { Text, View, Pressable, Image } from 'react-native';
 import React, { useContext } from 'react';
-import { Link, Stack } from 'expo-router';
 import { createStackNavigator } from '@react-navigation/stack';
 import Landing from './landing/option';
 import Tour from './landing/tour';

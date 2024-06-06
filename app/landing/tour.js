@@ -1,7 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Pressable, Image } from 'react-native';
 import React, { useState, useContext } from 'react';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../constants/colors';
